@@ -1,0 +1,32 @@
+<div class="card">
+  <div class="card-header">Notification Alerts</div>
+  <div class="card-block">
+    <p>Provide contextual feedback messages for typical user actions with the handful of available and flexible alert messages.<p>
+    <ngb-alert [dismissible]="false">
+      <strong>Warning!</strong> Better check yourself, you're not looking too good.
+    </ngb-alert>
+
+    <p class="mt-4">Closeable Alert</p>
+    <div *ngFor="let alert of alerts">
+      <ngb-alert [type]="alert.type" (close)="closeAlert(alert)">{{ alert.message }}</ngb-alert>
+    </div>
+    <p>
+      <button type="button" class="btn btn-primary" (click)="reset()">Reset</button>
+    </p>
+
+    <p class="mt-4">Self-Closing Alert</p>
+    <div>Static self-closing alert that disappears after 20 seconds (refresh the page if it has already disappeared)</div>
+    <ngb-alert *ngIf="!staticAlertClosed" (close)="staticAlertClosed = true">Check out our awesome new features!</ngb-alert>
+
+    <hr/>
+
+    <p>Show a self-closing success message that disappears after 5 seconds.</p>
+    <ngb-alert *ngIf="successMessage" type="success" (close)="successMessage = null">{{ successMessage }}</ngb-alert>
+    <p>
+      <button class="btn btn-primary" (click)="changeSuccessMessage()">Change message</button>
+    </p>
+
+    <p class="mt-4">Closeable Alert</p>
+    <ngb-alert type="custom" [dismissible]="false"><strong>Whoa!</strong> This is a custom alert.</ngb-alert>
+  </div>
+</div>

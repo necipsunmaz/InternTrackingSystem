@@ -1,0 +1,100 @@
+<div class="d-flex align-items-stretch flex-nowrap min-height-100">
+  <div class="bg-cover bg-2 hidden-sm-down col-md-6 col-lg-8"></div>
+  <div class="card card-block mb-0 rounded-0 p-5 col-sm-12 col-md-6 col-lg-4">
+    <div class="mb-3">
+      <img src="assets/images/logo.png" class="avatar-md mb-1" alt="">
+      <p class="ff-headers text-uppercase">AKADEMİSYEN ÜYE FORMU</p>
+    </div>
+    <form [formGroup]="registerForm" (ngSubmit)="registerUser(registerForm.value)">
+
+      <fieldset class="form-group" [ngClass]="{'has-danger': registerForm.get('firstname').hasError('required') && registerForm.get('firstname').touched}">
+        <label for="firstname" class="form-control-label">
+          İsim
+        </label>
+        <input type="text" class="form-control" placeholder="Adınız" [formControl]="registerForm.get('firstname')" [ngClass]="{'form-control-danger': registerForm.get('firstname').hasError('required') && registerForm.get('firstname').touched}"
+        />
+        <div class="form-control-feedback" *ngIf="registerForm.get('firstname').hasError('required') && registerForm.get('firstname').touched">Adınız gerekli</div>
+      </fieldset>
+
+      <fieldset class="form-group" [ngClass]="{'has-danger': registerForm.get('lastname').hasError('required') && registerForm.get('lastname').touched}">
+        <label for="lastname" class="form-control-label">
+          Soyisim
+        </label>
+        <input type="text" class="form-control" placeholder="Soyadınız" [formControl]="registerForm.get('lastname')" [ngClass]="{'form-control-danger': registerForm.get('lastname').hasError('required') && registerForm.get('lastname').touched}"
+        />
+        <div class="form-control-feedback" *ngIf="registerForm.get('lastname').hasError('required') && registerForm.get('lastname').touched">Soyadınız gerekli</div>
+      </fieldset>
+
+      <fieldset class="form-group" [ngClass]="{'has-danger': registerForm.get('email').hasError('email') && registerForm.get('email').touched}">
+        <label for="email" class="form-control-label">
+          Eposta
+        </label>
+        <input type="text" class="form-control" placeholder="example@mail.com" [formControl]="registerForm.get('email')" [ngClass]="{'form-control-danger': registerForm.get('email').hasError('email') && registerForm.get('email').touched}"
+        />
+        <div class="form-control-feedback" *ngIf="registerForm.get('email').hasError('email') && registerForm.get('email').touched">Lütfen bir eposta girin</div>
+      </fieldset>
+
+      <fieldset class="form-group" [ngClass]="{'has-danger': registerForm.get('username').hasError('required') && registerForm.get('username').touched}">
+        <label for="username" class="form-control-label">
+          Kullanıcı adı
+        </label>
+        <input type="text" class="form-control" placeholder="Kullanıcı adı" [formControl]="registerForm.get('username')" [ngClass]="{'form-control-danger': registerForm.get('username').hasError('required') && registerForm.get('username').touched}"
+        />
+
+        <div class="form-control-feedback" *ngIf="registerForm.get('username').touched && registerForm.get('username').errors">
+          <span class="col-sm-2"></span>
+          <span class="col-sm-10" style="padding:4px 0 0;color:red;" *ngIf="registerForm.get('username').hasError('required') && registerForm.get('username').touched">
+                   Kullanıcı adı gerekli
+                </span>
+          <span class="col-sm-10" style="padding:4px 0 0;color:red;" *ngIf="registerForm.get('username').errors.minlength">
+                    Kullanıcı adı 3 karakterden fazla olmalı
+                </span>
+          <span class="col-sm-10" style="padding:4px 0 0;color:red;" *ngIf="registerForm.get('username').errors.maxlength">
+                    Kullanıcı adı 16 karakterden fazla olmamalı
+                </span>
+        </div>
+      </fieldset>
+
+      <div formGroupName="passwordGroup" [ngClass]="{'has-error': registerForm.get('passwordGroup').errors }">
+        <fieldset class="form-group" [ngClass]="{'has-error': registerForm.get('passwordGroup.password').invalid && registerForm.get('passwordGroup.password').dirty}">
+          <label for="password">
+          Parola
+        </label>
+          <input type="password" class="form-control" placeholder="********" [formControl]="password" />
+          <div class="form-control-feedback" *ngIf="{'has-error': registerForm.get('passwordGroup.password').invalid && registerForm.get('passwordGroup.password').dirty && registerForm.get('passwordGroup.password').touched}">
+            <span class="col-sm-10" style="padding:4px 0 0;color:red;" *ngIf="registerForm.get('passwordGroup.password').hasError('required') && registerForm.get('passwordGroup.password').touched">
+                        Parola gerekli
+                    </span>
+            <span class="col-sm-10" style="padding:4px 0 0;color:red;" *ngIf="registerForm.get('passwordGroup.password').errors?.pattern">
+                        Parola harf, sayı & özel karakter içermelidir
+                    </span>
+          </div>
+        </fieldset>
+
+        <fieldset class="form-group" [ngClass]="{'has-error': registerForm.get('passwordGroup.retypepass').invalid && registerForm.get('passwordGroup.retypepass').dirty}">
+          <label for="password">
+          Parola Tekrar
+        </label>
+          <input type="password" class="form-control" placeholder="********" [formControl]="retypepass" />
+          <div class="form-control-feedback" *ngIf="(registerForm.get('passwordGroup.retypepass').touched || registerForm.get('passwordGroup.retypepass').dirty) && (registerForm.get('passwordGroup.retypepass').errors || registerForm.get('passwordGroup').errors)">
+            <span class="col-sm-2"></span>
+            <span class="col-sm-10" style="padding:4px 0 0;color:red;" *ngIf="registerForm.get('passwordGroup.retypepass').errors?.required">
+                        Parolayı doğrulayın
+                    </span>
+            <span class="col-sm-10" style="padding:4px 0 0;color:red;" *ngIf="registerForm.get('passwordGroup').errors?.mismatchedPassword">
+                        Parolalar birbiri ile eşleşmiyor
+                    </span>
+          </div>
+        </fieldset>
+      </div>
+      <label class="custom-control custom-checkbox mb-1">
+        <input type="checkbox" class="custom-control-input">
+        <span class="custom-control-indicator"></span>
+        <span class="custom-control-description">Kullanıcı sözleşmesi okudum ve onaylıyorum.</span>
+      </label>
+      <div class="block mb-3"></div>
+      <button class="btn btn-primary" type="submit" [disabled]="registerForm.invalid">KAYIT</button>
+      <a class="btn btn-outline-primary btn-link" [routerLink]="['/user/signin']">GİRİŞ</a>
+    </form>
+  </div>
+</div>

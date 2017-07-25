@@ -1,0 +1,247 @@
+<div class="row">
+  <div class="col-sm-6 col-md-3">
+    <div class="card card-block card-widget">
+      <div class="widget-icon rounded-circle bg-green text-white icon icon-basic-todo">
+      </div>
+      <div class="block ml-3 mr-3">
+        <h5 class="mb-0 fw-400">
+          380
+        </h5>
+        <small class="text-muted text-uppercase ">
+          <strong>Bu Dönem</strong>
+        </small>
+      </div>
+    </div>
+  </div>
+  <div class="col-sm-6 col-md-3">
+    <div class="card card-block card-widget">
+      <div class="widget-icon rounded-circle bg-blue text-white icon icon-ecommerce-graph1">
+      </div>
+      <div class="block ml-3 mr-3">
+        <h5 class="mb-0 fw-400">
+          86.44%
+        </h5>
+        <small class="text-muted text-uppercase ">
+          <strong>Bitirme Oranı</strong>
+        </small>
+      </div>
+    </div>
+  </div>
+  <div class="col-sm-6 col-md-3">
+    <div class="card card-block card-widget">
+      <div class="widget-icon rounded-circle bg-teal text-white icon icon-basic-paperplane">
+      </div>
+      <div class="block ml-3 mr-3">
+        <h5 class="mb-0 fw-400">
+          1300
+        </h5>
+        <small class="text-muted text-uppercase ">
+          <strong>Başvuru</strong>
+        </small>
+      </div>
+    </div>
+  </div>
+  <div class="col-sm-6 col-md-3">
+    <div class="card card-block card-widget">
+      <div class="widget-icon rounded-circle bg-red text-white icon icon-basic-postcard">
+      </div>
+      <div class="block ml-3 mr-3">
+        <h5 class="mb-0 fw-400">
+          600
+        </h5>
+        <small class="text-muted text-uppercase ">
+          <strong>Kabul Edilen</strong>
+        </small>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="row">
+  <div class="col-lg-6">
+    <div class="card">
+      <div class="card-header no-shadow">
+        <div class="card-header-text w-100">
+          <div class="card-title">
+            Stajyer Devamsızlık Çizelgesi
+          </div>
+          <div class="card-subtitle text-capitalize ff-sans">
+            Son güncelleme: 1 saat önce
+          </div>
+        </div>
+      </div>
+<div class="card-block">
+        <div class="row text-center">
+          <div class="col-sm-6 col-md-3 text-purple">
+            <h5 class="mb-0">
+              <strong>
+                34.45%
+              </strong>
+            </h5>
+            <small>
+              Hastalık
+            </small>
+          </div>
+          <div class="col-sm-6 col-md-3">
+            <h5 class="mb-0">
+              <strong>
+                21.78%
+              </strong>
+            </h5>
+            <small>
+              Özel Nedenler
+            </small>
+          </div>
+          <div class="col-sm-6 col-md-3 text-indigo">
+            <h5 class="mb-0">
+              <strong>
+                2.89%
+              </strong>
+            </h5>
+            <small>
+              İzinsiz
+            </small>
+          </div>
+          <div class="col-sm-6 col-md-3">
+            <h5 class="mb-0">
+              <strong>
+                34.76%
+              </strong>
+            </h5>
+            <small>
+              Eğitim
+            </small>
+          </div>
+        </div>
+      </div>
+      <div class="mb-1">
+        <ngx-charts-area-chart-stacked (legendlabelclick)="onLegendLabelClick($event)" (select)="select($event)" [curve]="curve" [gradient]="gradient" [legend]="showLegend" [results]="dateData" [roundDomains]="roundDomains" [scheme]="colorScheme" [schemeType]="schemeType" [showGridLines]="showGridLines" [showXAxisLabel]="showXAxisLabel" [showYAxisLabel]="showYAxisLabel" [timeline]="timeline" [tooltipDisabled]="tooltipDisabled" [xAxis]="showXAxis" [xAxisLabel]="xAxisLabel" [yAxis]="showYAxis" [yAxisLabel]="yAxisLabel" class="line-container">
+        </ngx-charts-area-chart-stacked>
+      </div>
+    </div>
+  </div>
+  <div class="col-lg-6">
+    <div class="card">
+      <div class="card-header no-shadow">
+        <div class="card-header-text w-100">
+          <div class="card-title">
+            Başarım Göstergesi
+          </div>
+          <div class="card-subtitle text-capitalize ff-sans">
+            Son güncelleme: 1 saat önce
+          </div>
+        </div>
+      </div>
+      <div class="card-block">
+        <div class="row text-center">
+          <div class="col-sm-6 col-md-3 text-purple">
+            <h5 class="mb-0">
+              <strong>
+                34.45%
+              </strong>
+            </h5>
+            <small>
+              Hastane
+            </small>
+          </div>
+          <div class="col-sm-6 col-md-3">
+            <h5 class="mb-0">
+              <strong>
+                21.78%
+              </strong>
+            </h5>
+            <small>
+              Bilgi İşlem
+            </small>
+          </div>
+          <div class="col-sm-6 col-md-3 text-indigo">
+            <h5 class="mb-0">
+              <strong>
+                2.89%
+              </strong>
+            </h5>
+            <small>
+              Donanım
+            </small>
+          </div>
+          <div class="col-sm-6 col-md-3">
+            <h5 class="mb-0">
+              <strong>
+                34.76%
+              </strong>
+            </h5>
+            <small>
+              Rektörlük
+            </small>
+          </div>
+        </div>
+      </div>
+      <div class="mb-1">
+        <ngx-charts-gauge (legendlabelclick)="onLegendLabelClick($event)" (select)="select($event)" [angleSpan]="gaugeAngleSpan" [bigSegments]="gaugeLargeSegments" [legend]="showLegend" [margin]="margin ? [marginTop, marginRight, marginBottom, marginLeft] : null" [max]="gaugeMax" [min]="gaugeMin" [results]="single" [scheme]="colorScheme" [showAxis]="gaugeShowAxis" [smallSegments]="gaugeSmallSegments" [startAngle]="gaugeStartAngle" [textValue]="gaugeTextValue" [tooltipDisabled]="tooltipDisabled" [units]="gaugeUnits" class="gauge-container">
+        </ngx-charts-gauge>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="row">
+  <div class="col-sm-12 col-md-6">
+    <div class="card">
+      <div class="card-header">Yıllara Göre Stajyer Sayısı</div>
+      <div class="card-block">
+        <div>
+          <ngx-charts-bar-vertical-2d
+            class="chart-container"
+            [scheme]="colorScheme"
+            [schemeType]="schemeType"
+            [results]="multi"
+            [gradient]="gradient"
+            [xAxis]="showXAxis"
+            [yAxis]="showYAxis"
+            [legend]="showLegend"
+            [showXAxisLabel]="showXAxisLabel"
+            [showYAxisLabel]="showYAxisLabel"
+            [tooltipDisabled]="tooltipDisabled"
+            [xAxisLabel]="xAxisLabel"
+            [yAxisLabel]="yAxisLabel"
+            (legendLabelClick)="onLegendLabelClick($event)"
+            [showGridLines]="showGridLines"
+            [barPadding]="barPadding"
+            [groupPadding]="groupPadding"
+            [roundDomains]="roundDomains"
+            (select)="select($event)">
+          </ngx-charts-bar-vertical-2d>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="col-sm-12 col-md-6">
+    <div class="card">
+      <div class="card-header">Yıllara Göre Stajyer Sayısı</div>
+      <div class="card-block">
+        <div>
+          <ngx-charts-bar-horizontal-2d
+            class="chart-container"
+            [scheme]="colorScheme"
+            [schemeType]="schemeType"
+            [results]="multi"
+            [gradient]="gradient"
+            [tooltipDisabled]="tooltipDisabled"
+            [xAxis]="showXAxis"
+            [yAxis]="showYAxis"
+            [legend]="showLegend"
+            (legendLabelClick)="onLegendLabelClick($event)"
+            [showXAxisLabel]="showXAxisLabel"
+            [showYAxisLabel]="showYAxisLabel"
+            [xAxisLabel]="xAxisLabel"
+            [yAxisLabel]="yAxisLabel"
+            [showGridLines]="showGridLines"
+            [barPadding]="barPadding"
+            [groupPadding]="groupPadding"
+            [roundDomains]="roundDomains"
+            (select)="select($event)">
+          </ngx-charts-bar-horizontal-2d>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

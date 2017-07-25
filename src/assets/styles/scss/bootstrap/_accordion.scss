@@ -1,0 +1,17 @@
+ngb-accordion > .card {
+  background-color: transparent;
+  .card-header {
+    a {
+      color: inherit;
+    }
+    &::after {
+      display: none;
+    }
+    &.active::after {
+      display: block;
+    }
+  }
+  > .card-header {
+    margin-top: 5px;
+  }
+}

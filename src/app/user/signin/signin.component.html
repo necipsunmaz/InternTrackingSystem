@@ -1,0 +1,34 @@
+<div class="d-flex align-items-stretch min-height-100">
+  <div class="bg-cover bg-1 hidden-sm-down col-md-6 col-lg-8"></div>
+  <div class="card card-block mb-0 rounded-0 p-5 col-sm-12 col-md-6 col-lg-4">
+    <form [formGroup]="form" (ngSubmit)="loginUser(form.value)">
+      <div class="mb-3">
+        <img src="assets/images/logo.png" class="avatar-md mb-1" alt="">
+        <p class="ff-headers text-uppercase">GİRİŞ YAPIN</p>
+      </div>
+      <fieldset class="form-group" [ngClass]="{'has-danger': form.get('username').hasError('required') && form.get('username').touched}">
+        <label for="username" class="form-control-label">
+          Kullanıcı adı
+        </label>
+        <input type="text" class="form-control" placeholder="Kullanıcı Adı" [formControl]="form.get('username')" [ngClass]="{'form-control-danger': form.get('username').hasError('required') && form.get('username').touched}"/>
+        <div class="form-control-feedback" *ngIf="form.get('username').hasError('required') && form.get('username').touched">Kullanıcı adı gerekli</div>
+      </fieldset>
+      <fieldset class="form-group" [ngClass]="{'has-danger': form.get('password').hasError('required') && form.get('password').touched}">
+        <label for="password" class="form-control-label">
+          Parola
+        </label>
+        <input type="password" class="form-control" placeholder="*********" [formControl]="form.get('password')" [ngClass]="{'form-control-danger': form.get('password').hasError('required') && form.get('password').touched}"/>
+        <div class="form-control-feedback" *ngIf="form.get('password').hasError('required') && form.get('password').touched">Parola gerekli</div>
+        <a [routerLink]="['/user/forgot']" class="form-text"><small>Parolamı unuttum</small></a>
+      </fieldset>
+      <label class="custom-control custom-checkbox mb-3">
+        <input type="checkbox" class="custom-control-input">
+        <span class="custom-control-indicator"></span>
+        <span class="custom-control-description">Beni hatırla</span>
+      </label>
+      <div class="block"></div>
+      <button class="btn btn-primary" type="submit" [disabled]="!form.valid">GİRİŞ</button>
+      <a class="btn btn-outline-primary btn-link" [routerLink]="['/user/signup']">AKADEMİSYEN KAYDI</a>
+    </form>
+  </div>
+</div>

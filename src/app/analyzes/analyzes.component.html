@@ -1,0 +1,57 @@
+<div class="row">
+
+  <div class="col-12 col-md-6">
+    <div class="card">
+      <div class="card-header">Bölümlere Göre Stajyer Sayıları</div>
+      <div class="card-block">
+        <div>
+          <ngx-charts-pie-chart class="chart-container" [scheme]="colorScheme" [results]="single" [legend]="showLegend" [explodeSlices]="explodeSlices"
+            [labels]="showLabels" [doughnut]="doughnut" [arcWidth]="arcWidth" (legendLabelClick)="onLegendLabelClick($event)"
+            [gradient]="gradient" [tooltipDisabled]="tooltipDisabled" (select)="select($event)">
+          </ngx-charts-pie-chart>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-sm-12 col-md-6">
+    <div class="card">
+      <div class="card-header">Bölümlere Göre Devam Başarısı</div>
+      <div class="card-block">
+        <div>
+          <ngx-charts-gauge class="chart-container" [legend]="showLegend" [results]="single" [textValue]="gaugeTextValue" [scheme]="colorScheme"
+            [min]="gaugeMin" [max]="gaugeMax" [units]="gaugeUnits" [angleSpan]="gaugeAngleSpan" [startAngle]="gaugeStartAngle"
+            [showAxis]="gaugeShowAxis" [bigSegments]="gaugeLargeSegments" [smallSegments]="gaugeSmallSegments" [margin]="margin ? [marginTop, marginRight, marginBottom, marginLeft] : null"
+            [tooltipDisabled]="tooltipDisabled" (select)="select($event)" (legendLabelClick)="onLegendLabelClick($event)">
+          </ngx-charts-gauge>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+  <div class="col-12">
+    <div class="card">
+      <div class="card-header">Genel Analizler</div>
+      <div class="card-block">
+        <div>
+          <ngx-charts-advanced-pie-chart class="chart-container" [scheme]="colorScheme" [results]="single" (legendLabelClick)="onLegendLabelClick($event)"
+            [gradient]="gradient" [tooltipDisabled]="tooltipDisabled" (select)="select($event)">
+          </ngx-charts-advanced-pie-chart>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-12">
+    <div class="card">
+      <div class="card-header">Bölümler</div>
+      <div class="card-block">
+        <div>
+          <ngx-charts-pie-grid class="chart-container" [scheme]="colorScheme" (legendLabelClick)="onLegendLabelClick($event)" [results]="single"
+            [tooltipDisabled]="tooltipDisabled" (select)="select($event)">
+          </ngx-charts-pie-grid>
+        </div>
+      </div>
+    </div>
+  </div>

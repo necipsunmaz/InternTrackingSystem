@@ -1,0 +1,77 @@
+<div class="row">
+  <div class="col-lg-6">
+    <div class="card">
+      <div class="card-header">Simple Typeahead</div>
+      <div class="card-block">
+        A typeahead example that gets values from a static <code>string[]</code>
+        <ul>
+          <li><code>debounceTime</code> operator</li>
+          <li>kicks in only if 2+ characters typed</li>
+          <li>limits to 10 results</li>
+        </ul>
+
+        <input type="text" class="form-control mb-3" [(ngModel)]="model" [ngbTypeahead]="search" />
+
+        <pre>Model: {{ model | json }}</pre>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header">Formatted results</div>
+      <div class="card-block">
+        <p>A typeahead example that uses a formatter function for string results</p>
+
+        <input type="text" class="form-control mb-3" [(ngModel)]="model" [ngbTypeahead]="search" [resultFormatter]="formatter" />
+
+        <pre>Model: {{ model | json }}</pre>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-lg-6">
+    <div class="card">
+      <div class="card-header">Wikipedia search</div>
+      <div class="card-block">
+        A typeahead example that gets values from the <code>WikipediaService</code>
+        <ul>
+          <li>remote data retrieval</li>
+          <li><code>debounceTime</code> operator</li>
+          <li><code>do</code> operator</li>
+          <li><code>distinctUntilChanged</code> operator</li>
+          <li><code>switchMap</code> operator</li>
+          <li><code>catch</code> operator to display an error message in case of connectivity issue</li>
+        </ul>
+
+        <div class="form-group" [class.has-danger]="searchFailed">
+          <input type="text" class="form-control" [(ngModel)]="model" [ngbTypeahead]="searchWiki" placeholder="Wikipedia search" />
+          <span *ngIf="searching">searching...</span>
+          <div class="form-control-feedback" *ngIf="searchFailed">Sorry, suggestions could not be loaded.</div>
+        </div>
+
+        <pre>Model: {{ model | json }}</pre>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header">Template for results</div>
+      <div class="card-block">
+        <p>A typeahead example that uses custom template for results display and uses object as a model</p>
+
+        <ng-template #rt let-r="result" let-t="term">
+          <img [src]="'https://upload.wikimedia.org/wikipedia/commons/thumb/' + r.flag" width="16">
+          {{ r.name}}
+        </ng-template>
+
+        <input type="text" class="form-control mb-3" [(ngModel)]="model" [ngbTypeahead]="searchFlags" [resultTemplate]="rt" [inputFormatter]="formatter" />
+
+        <pre>Model: {{ model | json }}</pre>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-lg-6">
+  </div>
+
+  <div class="col-lg-6">  
+  </div>
+</div>

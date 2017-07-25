@@ -1,0 +1,32 @@
+@import "../mixins/material-palette";
+@import "../variables";
+@import "../../../../../node_modules/bootstrap/scss/variables";
+
+:host /deep/ {
+  height: 100%;
+  ng-sidebar-container {
+    height: 100%;
+  }
+  .email-panel.ng-sidebar {
+    width: 300px;
+    border-right: 1px solid rgba($black,.1);
+  }
+
+  .list-group-item {
+    &.selected {
+      background-color: $alert-warning-bg;
+      border-color: $alert-warning-border;
+      + .list-group-item {
+        border-color: $alert-warning-border;
+      }
+      &:hover,
+      &:focus,
+      &:active {
+        background-color: $alert-warning-bg;
+      }
+    }
+    a .time {
+      font-size: 10px;
+    }
+  }
+}

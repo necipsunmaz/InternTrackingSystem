@@ -1,0 +1,15 @@
+<input type="email" class="form-control form-control-lg mb-3" placeholder="Type to filter icons" required (keyup)='updateFilter($event)'>
+
+<div class="icon-list">
+  <div class="mb-3" *ngFor="let group of collection">
+    <p class="ff-headers text-uppercase mb-3 fw-600">{{group.name}}</p>
+    <div class="row">
+      <div class="fa-hover col-md-3 col-sm-4" *ngFor="let icon of group.icons">
+        <a href="javascript:;" class="text-color" target="_blank">
+          <i class="icon {{icon}}"></i>
+          <span>{{icon}}</span>
+        </a>
+      </div>
+    </div>
+  </div>
+</div>

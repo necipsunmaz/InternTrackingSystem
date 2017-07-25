@@ -1,0 +1,47 @@
+<div class="card">
+  <div class="card-header">{{model.options}} Stajyer Başvuruları</div>
+  <div class="card-block">
+    <p>Şu anda {{model.options}} tüm stajyer başvuruları görmektesiniz.</p>
+  </div>
+  <div class="btn-group">
+    <button class="btn" [class.btn-primary]="model.options === item" 
+    [class.btn-secondary]="model.options !== item"  *ngFor="let item of radioItems" type="button" id="{{item}}" name="options" (click)="model.options=item;listRefresh();">{{item}}</button>
+  </div>
+
+  <div class="table-responsive">
+    <table class="table align-middle mb-0" *ngIf="basildimi ===true">
+      <thead>
+        <tr>
+          <th>&nbsp;</th>
+          <th>Ad Soyad</th>
+          <th>Staj Tarihi</th>
+          <th>Telefon No</th>
+          <th>Stajyer onay</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let intern of interns;let rowIndex = index">
+          <td>
+            <img src="https://randomuser.me/api/portraits/thumb/men/62.jpg" class="avatar-md rounded" alt="">
+          </td>
+          <td>
+            <a href="#" class="d-block text-capitalize">{{intern.firstname}} {{intern.lastname}} </a>
+          </td>
+          <td>{{ intern.starteddate | date:'yMMMd' }} - {{ intern.endeddate | date:'yMMMd' }}</td>
+
+          <td>
+            {{intern.phone}}
+          </td>
+          <td>
+            <button type="button" *ngIf="intern.verified==false" class="btn btn-primary" aria-label="View" (click)="verifyIntern(intern._id,!intern.verified);deleteRow(rowIndex)">
+                                    <span class="glyphicon glyphicon-eye-open" aria-hidden="true">Onayla</span>
+                                </button>
+            <button type="button" *ngIf="intern.verified==true" class="btn btn-danger" aria-label="View" (click)="verifyIntern(intern._id,!intern.verified);deleteRow(rowIndex)">
+                                    <span class="glyphicon glyphicon-eye-open" aria-hidden="true">Kaldır</span>
+                                </button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>

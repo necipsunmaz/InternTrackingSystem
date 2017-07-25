@@ -1,0 +1,178 @@
+<ng-sidebar-container class="app" [ngClass]="{'mode-boxed': isBoxed, 'sidebar-opened': isOpened, 'theme-light': theme == 'light', 'theme-dark': theme == 'dark', 'mode-push': _mode == 'push', 'mode-dock': _mode == 'dock', 'mode-over': _mode == 'over', 'mode-slide': _mode == 'slide', 'no-footer': options?.removeFooter, 'map-header': options?.mapHeader}">
+  <ng-sidebar
+    [(opened)]="isOpened"
+    [(mode)]="_mode"
+    [position]="'left'"
+    [dockedSize]="'80px'"
+    [autoCollapseWidth]="'991'"
+    [closeOnClickOutside]="isOver()"
+    [showBackdrop]="isOver()"
+    [sidebarClass]="'sidebar-panel'" #sidebar>
+    <nav class="navbar custom-navbar main-brand text-center">
+      <a class="navbar-brand mr-auto" [routerLink]="['/dashboard']">
+        <img src="assets/images/logo.png" class="avatar-lg" style="margin: 0 0 8px 30px;" alt=""><br>
+        <span class="docked-hidden">Bilgi İşlem<br>Staj Takip Sistemi</span>
+      </a>
+      <ul class="navbar-nav">
+        <li class="nav-item">
+          <a href="javascript:;" class="nav-link" (click)="toogleSidebar()">
+            <i class="hamburger-icon v2" *ngIf="_mode === 'over' && !isOver()">
+              <span></span>
+            </i>
+          </a>
+        </li>
+      </ul>
+    </nav>
+    <!-- main navigation -->
+    <nav class="menu">
+      <ul class="navigation" appAccordion>
+        <li class="navigation-item" appAccordionLink *ngFor="let menuitem of menuItems.getAll()" group="{{menuitem.state}}">
+          <a class="navigation-link" appAccordionToggle [routerLink]="['/', menuitem.state]" *ngIf="menuitem.type === 'link'">
+            <i class="icon icon-{{ menuitem.icon }}"></i>
+            <span>{{ menuitem.name | translate }}</span>
+            <span class="mr-auto"></span>
+            <span class="badge badge-{{ badge.type }}" *ngFor="let badge of menuitem.badge">{{ badge.value }}</span>
+          </a>
+          <a class="navigation-link" appAccordionToggle href="{{menuitem.state}}" *ngIf="menuitem.type === 'extLink'">
+            <i class="icon icon-{{ menuitem.icon }}"></i>
+            <span>{{ menuitem.name | translate }}</span>
+            <span class="mr-auto"></span>
+            <span class="badge badge-{{ badge.type }}" *ngFor="let badge of menuitem.badge">{{ badge.value }}</span>
+          </a>
+          <a class="navigation-link" appAccordionToggle href="{{menuitem.state}}" target="_blank" *ngIf="menuitem.type === 'extTabLink'">
+            <i class="icon icon-{{ menuitem.icon }}"></i>
+            <span>{{ menuitem.name | translate }}</span>
+            <span class="mr-auto"></span>
+            <span class="badge badge-{{ badge.type }}" *ngFor="let badge of menuitem.badge">{{ badge.value }}</span>
+          </a>
+          <a class="navigation-link" appAccordionToggle href="javascript:;" *ngIf="menuitem.type === 'sub'">
+            <i class="icon icon-{{ menuitem.icon }}"></i>
+            <span>{{ menuitem.name | translate }}</span>
+            <span class="mr-auto"></span>
+            <span class="badge badge-{{ badge.type }}" *ngFor="let badge of menuitem.badge">{{ badge.value }}</span>
+            <i class="menu-caret icon icon-arrows-right"></i>
+          </a>
+          <ul class="navigation-submenu" *ngIf="menuitem.type === 'sub'">
+            <li class="navigation-item" *ngFor="let childitem of menuitem.children" routerLinkActive="open">
+              <a [routerLink]="['/', menuitem.state, childitem.state ]" class="navigation-link relative">{{ childitem.name | translate }}</a>
+            </li>
+          </ul>
+        </li>
+      </ul>
+    </nav>
+    <!-- /main navigation -->
+  </ng-sidebar>
+
+  <div class="app-inner">
+    <nav class="navbar custom-navbar bg-faded main-header">
+      <ul class="navbar-nav">
+        <li class="nav-item">
+          <a href="javascript:;" class="nav-link" (click)="toogleSidebar()">
+            <i class="hamburger-icon v2" *ngIf="_mode !== 'dock'">
+              <span></span>
+            </i>
+          </a>
+        </li>
+      </ul>
+      <span class="navbar-heading hidden-xs-down">{{options?.heading}}</span>
+      <span class="mr-auto"></span>
+      <ul class="navbar-nav">
+        <li class="nav-item" ngbDropdown>
+          <a href="javascript:;" class="nav-link" ngbDropdownToggle>
+            <img src="assets/images/avatar.jpg" class="navbar-avatar rounded-circle" alt="user" title="user">
+          </a>
+          <div class="dropdown-menu dropdown-menu-right">
+            <a class="dropdown-item" href="javascript:;">
+              <i class="icon icon-basic-settings mr-3"></i>
+              <span>Ayarlar</span>
+            </a>
+            <a class="dropdown-item" href="javascript:;">
+              <i class="icon icon-basic-postcard mr-3"></i>
+              <span>Profil</span>
+            </a>
+            <a class="dropdown-item" href="javascript:;">
+              <i class="icon icon-basic-message-multiple mr-3"></i>
+              <span>Bildirimler</span>
+            </a>
+            <div class="dropdown-divider"></div>
+            <a class="dropdown-item" (click)="logoutfunc()">
+              <i class="icon icon-arrows-switch-vertical mr-3"></i>
+              <span>Çıkış</span>
+            </a>
+          </div>
+        </li> 
+        <li class="nav-item" ngbDropdown>
+          <a href="javascript:;" class="nav-link" ngbDropdownToggle>
+            <i class="fi flaticon-notification"></i>
+            <span class="badge badge-danger">4</span>
+          </a>
+          <div class="dropdown-menu dropdown-menu-right notifications">
+            <div class="notifications-wrapper">
+              <a href="javascript:;" class="dropdown-item">
+                <span class="badge badge-warning">YENİ</span>
+                &nbsp;Son dönem staj başvuruları geldi
+                <span class="time">2 seconds ago</span>
+              </a>
+              <a href="javascript:;" class="dropdown-item">
+                Staj kabul formunda değişikliğe gidildi
+                <span class="time">4 hours ago</span>
+              </a>
+              <a href="javascript:;" class="dropdown-item">
+                Islak imzası teslim edilmeyen stajyerler hakkında
+                <span class="time">9 days ago</span>
+              </a>
+              <a href="javascript:;" class="dropdown-item">
+                <span class="text-muted">Başvuru formu geldi</span>
+                <span class="time">5 gün önce</span>
+              </a>
+            </div>
+            <div class="notification-footer">Bildirimler</div>
+          </div>
+        </li>
+        <li class="nav-item">
+          <a href="javascript:;" class="nav-link" appToggleFullscreen>
+            <i class="fi flaticon-fullscreen"></i>
+          </a>
+        </li>
+        
+        <li class="nav-item">
+          <span class="nav-divider"></span>
+        </li>
+        <li class="nav-item">
+          <a href="javascript:;" class="nav-link" (click)="openSearch(search)">
+            <i class="fi flaticon-search"></i>
+          </a>
+        </li>
+              
+      </ul>
+    </nav>
+
+    <div class="main-content">
+      <router-outlet></router-outlet>
+      <nav class="navbar custom-navbar navbar-light main-footer small">
+        <ul class="navbar-nav mr-auto">
+          <li class="nav-item">
+            <a class="nav-link" href="javascript:;">
+              <span>Copyright &copy; 2017</span> <span class="ff-headers text-uppercase">Staj Takip Sistemi</span>. Tüm hakları gizlidir.
+            </a>
+          </li>
+        </ul>
+      </nav>
+    </div>
+  </div>
+
+</ng-sidebar-container>
+
+<ng-template #search let-c="close" let-d="dismiss">
+  <form class="search__form" action="">
+    <input class="search-input" name="search" type="search" placeholder="Arama..." autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" autofocus="true" />
+    <p class="text-muted"><small><strong>Anahtar kelimeni yazarak giriş tuşuna bas.</strong></small></p>
+  </form>
+  <div class="search-suggestions">
+    <h6 class="text-uppercase"><strong>Öneriler</strong></h6>
+    <p class="text-primary">#stajyerler #yoklama #analizler #dökümanlar #profil #kayıtlar</p>
+  </div>
+  <button type="button" class="search-close" aria-label="Close search form" (click)="d('Cross click')">
+    <i class="fi flaticon-close"></i>
+  </button>
+</ng-template>

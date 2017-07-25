@@ -1,0 +1,12 @@
+<input type="email" class="form-control form-control-lg mb-3" placeholder="Type to filter icons" required (keyup)='updateFilter($event)'>
+
+<div class="icon-list">
+  <div class="row">
+    <div class="fa-hover col-md-3 col-sm-4" *ngFor="let icon of icons">
+      <a href="http://fontawesome.io/icon/{{icon}}" class="text-color" target="_blank">
+        <i class="fa fa-{{icon}}"></i>
+        <span>{{icon}}</span>
+      </a>
+    </div>
+  </div>
+</div>

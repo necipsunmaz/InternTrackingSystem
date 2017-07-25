@@ -1,0 +1,40 @@
+<div class="card">
+  <div class="card-header">Modal</div>
+  <div class="card-block">
+    <button class="btn btn-secondary" (click)="open(content)">Modal with default options</button>
+    <pre>{{closeResult}}</pre>
+
+    <div role="document" class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h6 class="modal-title text-uppercase">Modal title</h6>
+          <button aria-label="Close" class="close" type="button">
+            <span aria-hidden="true">×</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <p>One fine body…</p>
+        </div>
+        <div class="modal-footer">
+          <button class="btn btn-secondary" type="button">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<ng-template ngbModalContainer></ng-template>
+<ng-template #content let-c="close" let-d="dismiss">
+  <div class="modal-header">
+    <h6 class="modal-title text-uppercase">Modal title</h6>
+    <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <p>One fine body&hellip;</p>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-secondary" (click)="c('Close click')">Close</button>
+  </div>
+</ng-template>

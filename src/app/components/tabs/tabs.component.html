@@ -1,0 +1,62 @@
+<p class="ff-headers text-uppercase mb-3 fw-600">Tabset</p>
+<div class="mb-5">
+  <ngb-tabset>
+    <ngb-tab title="Simple">
+      <ng-template ngbTabContent>Simple content</ng-template>
+    </ngb-tab>
+    <ngb-tab>
+      <ng-template ngbTabTitle><b>Fancy</b> title</ng-template>
+      <ng-template ngbTabContent>Fancy title content</ng-template>
+    </ngb-tab>
+    <ngb-tab title="Disabled" [disabled]="true">
+      <ng-template ngbTabContent>Disabled content</ng-template>
+    </ngb-tab>
+  </ngb-tabset>
+</div>
+
+<p class="ff-headers text-uppercase mb-3 fw-600">Pills</p>
+<div class="mb-5">
+  <ngb-tabset type="pills">
+    <ngb-tab title="Simple">
+      <ng-template ngbTabContent>Simple content</ng-template>
+    </ngb-tab>
+    <ngb-tab>
+      <ng-template ngbTabTitle><b>Fancy</b> title</ng-template>
+      <ng-template ngbTabContent>Fancy title content</ng-template>
+    </ngb-tab>
+    <ngb-tab title="Disabled" [disabled]="true">
+      <ng-template ngbTabContent>Disabled content</ng-template>
+    </ngb-tab>
+  </ngb-tabset>
+</div>
+
+<p class="ff-headers text-uppercase mb-3 fw-600">Select an active tab by id</p>
+<div class="mb-5">
+  <ngb-tabset #t="ngbTabset">
+    <ngb-tab title="Simple" id="foo">
+      <ng-template ngbTabContent>Simple content</ng-template>
+    </ngb-tab>
+    <ngb-tab id="bar">
+      <ng-template ngbTabTitle><b>Fancy</b> title</ng-template>
+      <ng-template ngbTabContent>Fancy title content</ng-template>
+    </ngb-tab>
+  </ngb-tabset>
+  <p>
+    <button class="btn btn-outline-primary" (click)="t.select('bar')">Selected tab with "bar" id</button>
+  </p>
+</div>
+
+<p class="ff-headers text-uppercase mb-3 fw-600">Prevent tab change</p>
+<div class="mb-5">
+  <ngb-tabset (tabChange)="beforeChange($event)">
+    <ngb-tab title="Simple" id="foo">
+      <ng-template ngbTabContent>Simple content</ng-template>
+    </ngb-tab>
+    <ngb-tab id="bar" title="I can't be selected...">
+      <ng-template ngbTabContent>I can't be selected content</ng-template>
+    </ngb-tab>
+    <ngb-tab title="But I can!" >
+      <ng-template ngbTabContent>But I can content</ng-template>
+    </ngb-tab>
+  </ngb-tabset>
+</div>

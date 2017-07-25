@@ -1,0 +1,40 @@
+<div class="card">
+  <div class="card-header">Media list</div>
+  <div class="card-block">
+    <p>Showing all results matching "web development"</p>
+  </div>
+
+  <div class="table-responsive">
+    <table class="table align-middle mb-0">
+      <thead>
+        <tr>
+          <th>&nbsp;</th>
+          <th>User</th>
+          <th>Registered</th>
+          <th>Location</th>
+          <th>Email</th>
+          <th>Phone</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let user of users">
+          <td>
+            <img src="{{user.picture.large}}" class="avatar-md rounded" alt="">
+          </td>
+          <td>
+            <a href="#" class="d-block text-capitalize">{{user.name.title}} {{user.name.first}} {{user.name.last}}</a>
+            <small>{{user.login.username}}</small>
+          </td>
+          <td>{{ user.registered | date:'yMMMd' }}</td>
+          <td>
+              <span class="badge badge-default text-uppercase">{{user.location.city}}</span>
+          </td>
+          <td>
+              <a href="#">{{user.email}}</a>
+          </td>
+          <td>{{user.cell}}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
