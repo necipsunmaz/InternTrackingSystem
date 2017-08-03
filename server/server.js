@@ -45,7 +45,9 @@ app.get('/', function (req, res) {
   res.send('Expense Watch API is running at http://localhost:' + port + '/api');
 });
 
-app.post('/register', user.signup); // Register user
+app.post('/register', user.signup);
+ // Register user
+app.post('/register_admin', user.signup_admin);
 
 app.post('/intern', intern.saveintern); // adds & update expense of the user
 
@@ -69,17 +71,22 @@ apiRoutes.get('/user/:id', user.getuserDetails); // API returns user details
 
 apiRoutes.put('/user/:id', user.updateUser); // API updates user details
 
+apiRoutes.put('/academician_add/:id', user.academician_add);
+
 apiRoutes.put('/password/:id', user.updatePassword); // API updates user password
 
 apiRoutes.delete('/intern/:id', intern.delintern); //API removes the expense details of given expense id
 
 apiRoutes.get('/intern/:id', intern.getintern); // API returns expense details of given expense id
 
-apiRoutes.get('/getintern_admin/:verified', intern.getintern_admin); // API returns expense details of given expense id
+apiRoutes.post('/getintern_admin/:verified', intern.getintern_admin); // API returns expense details of given expense id
 
 apiRoutes.put('/confirmintern/:id', intern.confirmintern); // API returns expense details of given expense id
 
 apiRoutes.get('/interns/:option', intern.getinterns); // API returns all intern by time or any 
+
+apiRoutes.put('/check_intern/:id', intern.checkintern); // API returns all intern by time or any 
+
 
 
 // kick off the server 
