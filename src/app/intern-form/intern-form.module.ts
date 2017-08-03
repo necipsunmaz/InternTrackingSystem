@@ -3,33 +3,44 @@ import { RouterModule } from '@angular/router';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
-import { FileUploadModule } from 'ng2-file-upload/ng2-file-upload';
-import { DatePickerService, I18n } from '../DatePicker/DatePicker.service'
+import { DatePickerService, I18n } from '../datepicker/datePicker.service';
+import { MyDateRangePickerModule } from 'mydaterangepicker';
+import { TextMaskModule } from 'angular2-text-mask';
 
 
-import { InternService } from './intern.service';
-import { AuthLayoutComponent } from '../layouts/auth/auth-layout.component';
+import { InternFormComponent } from './intern-form.component';
+//import { ForgotComponent } from './forgot/forgot.component';
+import { AuthGuard } from '../user/auth-guard.service';
+import { AuthService } from '../user/auth.service';
+import { InternFormService } from './intern-form.service';
 import { FormWizardModule } from 'angular2-wizard';
 
-/* App Root */
-import { InternFormComponent } from './intern-form.component';
 
 @NgModule({
-  declarations: [InternFormComponent],
+  declarations: [
+    InternFormComponent
+    //ForgotComponent,
+  ],
   imports: [
     CommonModule,
     FormsModule,
     NgbModule,
+    TextMaskModule,
+    FormWizardModule,
     ReactiveFormsModule,
-    FileUploadModule,
+    MyDateRangePickerModule,
     RouterModule.forChild([
       { path: '', component: InternFormComponent }
       //{ path: 'password', canActivate: [ AuthGuard], component: ForgotComponent },
-    ]),
-    FormWizardModule
+    ])
   ],
-  providers: [InternService, DatePickerService, I18n],
+  providers: [
+    DatePickerService,
+    I18n,
+    AuthService,
+    AuthGuard,
+    InternFormService
+  ],
   bootstrap: [InternFormComponent]
 })
-
 export class InternFormModule { }

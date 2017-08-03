@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { FormControl, FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { Router, ActivatedRoute } from '@angular/router';
+import { Router } from '@angular/router';
 
 import { ToastrService } from '../../common/toastr.service';
 import { AuthService } from '../auth.service';
@@ -12,7 +12,7 @@ import { AuthService } from '../auth.service';
 })
 export class SigninComponent {
 
-   constructor(private fb: FormBuilder, 
+  constructor(private fb: FormBuilder,
     private authService: AuthService,
     private router: Router,
     private toastr: ToastrService) {
@@ -27,7 +27,7 @@ export class SigninComponent {
   });
 
 
-  loginUser(formdata:any): void {
+  loginUser(formdata: any): void {
     if (this.form.dirty && this.form.valid) {
       this.authService.login(this.form.value)
         .subscribe(data => {

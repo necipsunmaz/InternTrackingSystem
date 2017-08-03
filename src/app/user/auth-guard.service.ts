@@ -4,12 +4,29 @@ import { ActivatedRouteSnapshot, RouterStateSnapshot, Router, CanActivate } from
 import { AuthService } from './auth.service';
 import { ToastrService } from '../common/toastr.service';
 
+
 @Injectable()
-export  class AuthGuard implements CanActivate {
+export class IsLoggedIn {
+    constructor(
+        private router: Router,
+        private authService: AuthService,
+        private toastr: ToastrService) {
+    }
+
+    resolve(): void {
+        if (this.authService.isLoggedIn()) {
+            this.toastr.info("Önceden giriş yaptınız.");
+            this.router.navigate(['/dashboard']);
+        }
+    }
+}
+
+@Injectable()
+export class AuthGuard implements CanActivate {
 
     constructor(private authService: AuthService,
-                private router: Router,
-                private toastr: ToastrService) { }
+        private router: Router,
+        private toastr: ToastrService) { }
 
     canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): boolean {
         return this.checkLoggedIn(state.url);
@@ -20,8 +37,46 @@ export  class AuthGuard implements CanActivate {
             return true;
         }
 
-        this.toastr.info("Lütfen bu sayfadan giriş yapın.")
         this.router.navigate(['/user/signin']);
         return false;
+    }
+}
+
+@Injectable()
+export class IsAdmin implements CanActivate {
+
+    constructor(private authService: AuthService,
+        private router: Router) { }
+
+    canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): boolean {
+        let role = JSON.parse(localStorage.getItem('currentUser')).user.role;
+        if (role === 'Admin' || role === 'SuperAdmin') {
+            return true
+        }
+
+    }
+}
+
+@Injectable()
+export class IsSuperAdmin implements CanActivate {
+
+    constructor(private authService: AuthService,
+        private router: Router) { }
+
+    canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): boolean {
+        let role = JSON.parse(localStorage.getItem('currentUser')).user.role;
+        return role === 'SuperAdmin'
+    }
+}
+
+@Injectable()
+export class IsAcedemician implements CanActivate {
+
+    constructor(private authService: AuthService,
+        private router: Router) { }
+
+    canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): boolean {
+        let role = JSON.parse(localStorage.getItem('currentUser')).user.role;
+        return role === 'Acedemician'
     }
 }

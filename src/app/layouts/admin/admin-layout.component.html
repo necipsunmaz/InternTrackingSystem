@@ -26,7 +26,7 @@
     <!-- main navigation -->
     <nav class="menu">
       <ul class="navigation" appAccordion>
-        <li class="navigation-item" appAccordionLink *ngFor="let menuitem of menuItems.getAll()" group="{{menuitem.state}}">
+        <li class="navigation-item" appAccordionLink *ngFor="let menuitem of getAll()" group="{{menuitem.state}}">
           <a class="navigation-link" appAccordionToggle [routerLink]="['/', menuitem.state]" *ngIf="menuitem.type === 'link'">
             <i class="icon icon-{{ menuitem.icon }}"></i>
             <span>{{ menuitem.name | translate }}</span>

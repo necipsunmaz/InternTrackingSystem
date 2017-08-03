@@ -17,8 +17,8 @@ import { AuthLayoutComponent } from './layouts/auth/auth-layout.component';
 import { SharedModule } from './shared/shared.module';
 
 import { ToastrService } from './common/toastr.service';
-import { AuthService} from './user/auth.service';
-import { AuthGuard} from './user/auth-guard.service';
+import { AuthService } from './user/auth.service';
+import { AuthGuard, IsLoggedIn, IsAdmin, IsSuperAdmin, IsAcedemician } from './user/auth-guard.service';
 
 
 export function createTranslateLoader(http: Http) {
@@ -48,7 +48,7 @@ export function createTranslateLoader(http: Http) {
     NgbModule.forRoot(),
     SidebarModule.forRoot()
   ],
-  providers: [ToastrService,AuthService,AuthGuard],
+  providers: [ToastrService, AuthService, AuthGuard, IsLoggedIn, IsAdmin, IsSuperAdmin, IsAcedemician],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

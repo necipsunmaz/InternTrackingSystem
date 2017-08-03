@@ -9,7 +9,11 @@ const UserSchema = new Schema({
     img: {data:Buffer, contentType:String},
     username: {type:String},
     password: {type:String},
-    role: {type: Boolean, default: false}
+    dob: {type:Date},
+    phone: {type:String},
+    department: {type: String},
+    isEnabled: {type: Boolean, default: false},
+    role: {type: String, default: 'academician'}
 });
 
 // if role is true then user's role READ and WRITE, else its just READ.

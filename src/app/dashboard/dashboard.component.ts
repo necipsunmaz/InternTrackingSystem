@@ -6,6 +6,7 @@ import {
   multi,
   generateData
 } from '../shared/chartData';
+import { Router, ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-dashboard',
@@ -14,6 +15,15 @@ import {
 })
 
 export class DashboardComponent {
+
+  constructor(private router: Router, private route: ActivatedRoute) {
+    Object.assign(this, {
+      single,
+      multi
+    });
+    this.dateData = generateData(5, false);
+  }
+
   single: any[];
   multi: any[];
   graph: {
@@ -22,6 +32,55 @@ export class DashboardComponent {
   };
 
   ngOnInit() {
+    // ROle
+/*
+    let role = JSON.parse(localStorage.getItem('currentUser')).user.role;
+    let routerConfig = this.router.config;
+    console.log(role);
+    if (role != null) {
+      switch (role) {
+
+        // If SuperAdmin
+        case 'SuperAdmin':
+          routerConfig[1].children.push({
+            path: 'appeals',
+            loadChildren: './appeals/appeals.module#AppealsModule'
+          }, {
+              path: 'analyzes',
+              loadChildren: './analyzes/analyzes.module#AnalyzesModule'
+            }, {
+              path: 'intern',
+              loadChildren: './intern/intern.module#InternModule'
+            });
+          // this.router.resetConfig(routerConfig);
+          break;
+
+        // If Admin
+        case 'Admin':
+          routerConfig[1].children.push({
+            path: 'appeals',
+            loadChildren: './appeals/appeals.module#AppealsModule'
+          }, {
+              path: 'analyzes',
+              loadChildren: './analyzes/analyzes.module#AnalyzesModule'
+            }, {
+              path: 'intern',
+              loadChildren: './intern/intern.module#InternModule'
+            });
+          // this.router.resetConfig(routerConfig);
+          break;
+
+        // If Acedemician
+        case 'Acedemician':
+          routerConfig[1].children.push({
+            path: 'dashboard',
+            loadChildren: './dashboard/dashboard.module#DashboardModule'
+          });
+          // this.router.resetConfig(routerConfig);
+          break;
+
+      }
+    }*/
   }
 
   dateData: any[];
@@ -71,14 +130,6 @@ export class DashboardComponent {
   gaugeShowAxis = true;
   gaugeValue = 50; // linear gauge value
   gaugePreviousValue = 70;
-
-  constructor() {
-    Object.assign(this, {
-      single,
-      multi
-    });
-    this.dateData = generateData(5, false);
-  }
 
   select(data) {
     console.log('Item clicked', data);

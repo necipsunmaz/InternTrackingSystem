@@ -10,16 +10,16 @@ exports.saveintern = function (req, res, next) {
     const email = req.body.email;
     const tc = req.body.tc;
     const dob = req.body.dob;
-    const starteddate = new Date().getDate();
-    const endeddate = new Date().getDate();
+    const starteddate = req.body.starteddate;
+    const endeddate = req.body.endeddate;
     const phone = req.body.phone;
     const address = req.body.address;
     const photo = req.body.photo;
     const _id = req.body._id;
 
-    if (!tc || !firstname || !lastname || !email || !starteddate || !endeddate || !phone || !address || !gender || !dob) {
+    if (!tc || !firstname || !lastname || !email || !starteddate || !endeddate || !phone || !address || gender == null || !dob || !photo) {
         return res.status(422).send({ success: false, message: 'Veriler geçerli değil veya doğrulanmadı.' });
-    } else {
+    }
         if (_id) {
             // edit intern
             Intern.findById(_id).exec(function (err, intern) {
@@ -72,7 +72,7 @@ exports.saveintern = function (req, res, next) {
             });
         }
     }
-}
+
 
 // delete intern
 exports.delintern = function (req, res, next) {

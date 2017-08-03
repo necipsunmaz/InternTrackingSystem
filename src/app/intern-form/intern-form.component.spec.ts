@@ -1,6 +1,7 @@
 import { TestBed, async } from '@angular/core/testing';
 import { InternFormComponent } from './intern-form.component';
 
+
 describe('InternFormComponent', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({

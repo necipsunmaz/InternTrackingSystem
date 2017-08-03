@@ -2,9 +2,9 @@ import { Component, OnInit, OnDestroy, ViewChild, HostListener, AnimationTransit
 import { Title } from '@angular/platform-browser';
 import { Router, ActivatedRoute, NavigationEnd } from '@angular/router';
 import { NgbModal, ModalDismissReasons } from '@ng-bootstrap/ng-bootstrap';
-import { AuthService} from "../../user/auth.service";
+import { AuthService } from "../../user/auth.service";
 import { ToastrService } from '../../common/toastr.service'
-import { MenuItems } from '../../shared/menu-items/menu-items';
+//import { MenuItems } from '../../shared/menu-items/menu-items';
 import { Subscription } from 'rxjs/Subscription';
 import 'rxjs/add/operator/filter';
 import { TranslateService } from '@ngx-translate/core';
@@ -14,6 +14,29 @@ export interface Options {
   removeFooter?: boolean;
   mapHeader?: boolean;
 }
+
+export interface BadgeItem {
+  type: string;
+  value: string;
+}
+
+export interface ChildrenItems {
+  state: string;
+  name: string;
+  type?: string;
+}
+
+export interface Menu {
+  state: string;
+  name: string;
+  type: string;
+  icon: string;
+  badge?: BadgeItem[];
+  children?: ChildrenItems[];
+}
+
+var MENUITEMS = [];
+
 
 @Component({
   selector: 'app-layout',
@@ -38,10 +61,9 @@ export class AdminLayoutComponent implements OnInit, OnDestroy {
 
   @ViewChild('sidebar') sidebar;
 
-  constructor (
-    private authService : AuthService,
-    private toastr : ToastrService,
-    public menuItems: MenuItems,
+  constructor(
+    private authService: AuthService,
+    private toastr: ToastrService,
     private router: Router,
     private route: ActivatedRoute,
     public translate: TranslateService,
@@ -52,6 +74,86 @@ export class AdminLayoutComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
+    let role = JSON.parse(localStorage.getItem('currentUser')).user.role;
+    if (role != null) {
+      if (role === 'SuperAdmin') {
+        MENUITEMS = [];
+        MENUITEMS.push(
+          {
+            state: 'dashboard',
+            name: 'GİRİŞ',
+            type: 'link',
+            icon: 'basic-accelerator'
+          }, {
+            state: 'appeals',
+            name: 'BAŞVURULAR',
+            type: 'link',
+            icon: 'basic-paperplane'
+          }, {
+            state: 'analyzes',
+            name: 'ANALİZLER',
+            type: 'link',
+            icon: 'ecommerce-graph1'
+          }, {
+            state: 'intern',
+            name: 'STAJYER',
+            type: 'sub',
+            icon: 'basic-postcard',
+            children: [{
+              state: 'tracking',
+              name: 'Devam/Devamsızlık'
+            }, {
+              state: 'profile',
+              name: 'PROFİL'
+            }, {
+              state: 'calendar',
+              name: 'Devam/Devamsızlık Takvimi'
+            }]
+          });
+      } else if (role === 'Admin') {
+        MENUITEMS = [];
+        MENUITEMS.push(
+          {
+            state: 'dashboard',
+            name: 'GİRİŞ',
+            type: 'link',
+            icon: 'basic-accelerator'
+          }, {
+            state: 'appeals',
+            name: 'BAŞVURULAR',
+            type: 'link',
+            icon: 'basic-paperplane'
+          }, {
+            state: 'analyzes',
+            name: 'ANALİZLER',
+            type: 'link',
+            icon: 'ecommerce-graph1'
+          }, {
+            state: 'intern',
+            name: 'STAJYER',
+            type: 'sub',
+            icon: 'basic-postcard',
+            children: [{
+              state: 'tracking',
+              name: 'Devam/Devamsızlık'
+            }, {
+              state: 'profile',
+              name: 'PROFİL'
+            }, {
+              state: 'calendar',
+              name: 'Devam/Devamsızlık Takvimi'
+            }]
+          });
+      } else if (role === 'Acedemician') {
+        MENUITEMS = [];
+        MENUITEMS.push({
+          state: 'dashboard',
+          name: 'GİRİŞ',
+          type: 'link',
+          icon: 'basic-accelerator'
+        });
+      }
+    }
 
     if (this.isOver()) {
       this._mode = 'over';
@@ -84,8 +186,8 @@ export class AdminLayoutComponent implements OnInit, OnDestroy {
     this._router.unsubscribe();
   }
 
-  setTitle( newTitle: string) {
-    this.titleService.setTitle( 'ADÜ Staj Takip Sistemi | ' + newTitle );
+  setTitle(newTitle: string) {
+    this.titleService.setTitle('ADÜ Staj Takip Sistemi | ' + newTitle);
   }
 
   toogleSidebar(): void {
@@ -103,14 +205,14 @@ export class AdminLayoutComponent implements OnInit, OnDestroy {
   }
 
   addMenuItem(): void {
-    this.menuItems.add({
+    this.add({
       state: 'menu',
       name: 'MENU',
       type: 'sub',
       icon: 'basic-webpage-txt',
       children: [
-        {state: 'menu', name: 'MENU'},
-        {state: 'menu', name: 'MENU'}
+        { state: 'menu', name: 'MENU' },
+        { state: 'menu', name: 'MENU' }
       ]
     });
   }
@@ -127,10 +229,18 @@ export class AdminLayoutComponent implements OnInit, OnDestroy {
     }
     this.width = event.target.innerWidth;
   }
-  
-  logoutfunc(){
-      this.authService.logout();
-      this.toastr.success('Başarıyla çıkış yaptınız.');
-      this.router.navigate(['/user/signin']);
+
+  logoutfunc() {
+    this.authService.logout();
+    this.toastr.success('Başarıyla çıkış yaptınız.');
+    this.router.navigate(['/user/signin']);
+  }
+
+  getAll(): Menu[] {
+    return MENUITEMS;
+  }
+
+  add(menu: Menu) {
+    MENUITEMS.push(menu);
   }
 }
