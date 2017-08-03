@@ -5,28 +5,54 @@ var config = require('../config');
 var MongoDB = require('mongodb');
 
 
-exports.signup = function (req, res, next) {
-  // Check for registration errors
+exports.signup_admin = function (req, res, next) {
+  const option = req.body.option;
   const firstname = req.body.firstname;
   const lastname = req.body.lastname;
   const email = req.body.email;
   const img = req.body.img;
   const username = req.body.username;
   const password = req.body.password;
-  const dob = req.body.dob;
-  const phone = req.body.phone;
   const department = req.body.department;
-  const role = false;
-
-  if (!firstname || !lastname || !email || !username || !password || !dob || !phone || !department) {
+  const role = 1;
+  if (!firstname || !lastname || !email || !username || !password) {
     return res.status(422).json({
       success: false,
-      message: 'Gönderilen bilgiler kabul edilemez.'
+      message: 'Gönderilen bilgiler kabul edilmez.'
     });
-  } else {
-    User.findOne({
-      username: username
-    }, function (err, existingUser) {
+  }
+
+  User.findOne({
+    username: username
+  }, function (err, existingUser) {
+    if (err) {
+      res.status(400).json({
+        success: false,
+        message: 'İşlem hataya uğradı! Hata: ' + err
+      });
+    }
+
+    // If user is not unique, return error
+    if (existingUser) {
+      return res.status(201).json({
+        success: false,
+        message: 'Kullanıcı adı kullanımda'
+      });
+    }
+
+    // If no error, create account
+    let oUser = new User({
+      firstname: firstname,
+      lastname: lastname,
+      email: email,
+      username: username,
+      password: password,
+      img: img,
+      department: department,
+      role: role
+    });
+
+    oUser.save(function (err, oUser) {
       if (err) {
         res.status(400).json({
           success: false,
@@ -34,42 +60,78 @@ exports.signup = function (req, res, next) {
         });
       }
 
-      // If user is not unique, return error
-      if (existingUser) {
-        return res.status(201).json({
+      res.status(201).json({
+        success: true,
+        message: 'Kaydınız başarı ile tamamlandı giriş bilgileriniz ile giriş yapın.'
+      });
+    });
+  });
+
+
+}
+
+exports.signup = function (req, res, next) {
+  // Check for registration errors
+  const option = req.body.option;
+  const firstname = req.body.firstname;
+  const lastname = req.body.lastname;
+  const email = req.body.email;
+  const img = req.body.img;
+  const username = req.body.username;
+  const password = req.body.password;
+  const role = 0;
+
+  if (!firstname || !lastname || !email || !username || !password) {
+    return res.status(422).json({
+      success: false,
+      message: 'Gönderilen bilgiler kabul edilmez.'
+    });
+  }
+
+  User.findOne({
+    username: username
+  }, function (err, existingUser) {
+    if (err) {
+      res.status(400).json({
+        success: false,
+        message: 'İşlem hataya uğradı! Hata: ' + err
+      });
+    }
+
+    // If user is not unique, return error
+    if (existingUser) {
+      return res.status(201).json({
+        success: false,
+        message: 'Kullanıcı adı kullanımda'
+      });
+    }
+
+    // If no error, create account
+    let oUser = new User({
+      firstname: firstname,
+      lastname: lastname,
+      email: email,
+      username: username,
+      password: password,
+      img: img,
+      intern_ids: [],
+      role: role
+    });
+
+    oUser.save(function (err, oUser) {
+      if (err) {
+        res.status(400).json({
           success: false,
-          message: 'Kullanıcı adı kullanımda'
+          message: 'İşlem hataya uğradı! Hata: ' + err
         });
       }
 
-      // If no error, create account
-      let oUser = new User({
-        firstname: firstname,
-        lastname: lastname,
-        email: email,
-        username: username,
-        password: password,
-        phone:phone,
-        department: department,
-        dob: dob,
-        img: img
-      });
-
-      oUser.save(function (err, oUser) {
-        if (err) {
-          res.status(400).json({
-            success: false,
-            message: 'İşlem hataya uğradı! Hata: ' + err
-          });
-        }
-
-        res.status(201).json({
-          success: true,
-          message: 'Kaydınız tamamlandı sistem tarafından onaylandıktan sonra giriş yapabilirisiniz.'
-        });
+      res.status(201).json({
+        success: true,
+        message: 'Kaydınız başarı ile tamamlandı giriş bilgileriniz ile giriş yapın.'
       });
     });
-  }
+  });
 }
 
 exports.login = function (req, res, next) {
@@ -91,9 +153,9 @@ exports.login = function (req, res, next) {
       });
     } else if (user) {
       user.comparePassword(req.body.password, function (err, isMatch) {
-        if (isMatch && !err && user.isEnabled === true) {
+        if (isMatch && !err) {
           var token = jwt.sign(user, config.secret, {
-            expiresIn: config.tokenexp            
+            expiresIn: config.tokenexp
           });
 
           let last_login = user.lastlogin;
@@ -116,17 +178,11 @@ exports.login = function (req, res, next) {
                 'userid': user._id,
                 'username': user.username,
                 'firstname': user.firstname,
-                'lastlogin': last_login,
-                'department': user.department,
-                'role': user.role
+                'role': user.role,
+                'lastlogin': last_login
               },
               token: token
             });
-          });
-        } else if (isMatch && !err && user.isEnabled === false) {
-          res.status(201).json({
-            success: false,
-            message: 'Hesabınız oluşuturlmuş ancak henüz onaylanmamış!'
           });
         } else {
           res.status(201).json({
@@ -272,6 +328,50 @@ exports.updatePassword = function (req, res, next) {
               message: 'Eski parola doğru değil.'
             });
           }
+        });
+      }
+    });
+  }
+}
+
+exports.academician_add = function (req, res, next) {
+  const userid = req.params.id;
+  var a = req.body.intern_ids;
+  var intern_ids = a.split(',');
+
+  if (!userid || !intern_ids) {
+    return res.status(422).json({
+      success: false,
+      message: 'Gönderilen bilgiler kabul edilmez.'
+    });
+  } else {
+
+    User.findOne({
+      _id: userid
+    }, function (err, user) {
+      if (err) {
+        res.status(400).json({
+          success: false,
+          message: 'İşlem hataya uğradı! Hata: ' + err
+        });
+      }
+      if (user) {
+        user.intern_ids.forEach(function (e) {
+          intern_ids.push(e);
+        });
+        user.intern_ids = intern_ids;
+        user.save(function (err) {
+          if (err) {
+            res.status(400).json({
+              success: false,
+              message: 'İşlem hataya uğradı! Hata: ' + err
+            });
+          }
+
+          res.status(201).json({
+            success: true,
+            message: 'Şifreniz başarıyla güncellendi.'
+          });
         });
       }
     });
