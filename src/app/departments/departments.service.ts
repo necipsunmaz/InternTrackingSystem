@@ -7,7 +7,7 @@ import 'rxjs/add/operator/map';
 import 'rxjs/add/observable/throw';
 
 @Injectable()
-export class UserService {
+export class DepartmentsService {
 
     public jwtToken: string;
 
@@ -18,67 +18,82 @@ export class UserService {
         }
     }
 
-    register(oUser) {
-        let headers = new Headers({ 'Content-Type': 'application/json' });
-        let options = new RequestOptions({ headers: headers });
-
-        return this.http.post('http://localhost:3000/register', JSON.stringify(oUser), options)
-            .map((response: Response) => response.json())
-            .catch(this.handleError);
-    }
-
-    getUser(opt) {
+    // Only for super admin
+    saveDepartment(oDepartment) {
         let headers = new Headers();
         headers.append('Content-Type', 'application/json');
         headers.append('Authorization', `${this.jwtToken}`);
         let options = new RequestOptions({ headers: headers });
 
-        return this.http.get(`http://localhost:3000/api/user/${opt}`, options)
+        return this.http.post('http://localhost:3000/api/department', JSON.stringify(oDepartment), options)
             .map((response: Response) => response.json())
             .catch(this.handleError);
     }
 
-    registerAdmin(oAdmin) {
+    getDepartment() {
         let headers = new Headers();
         headers.append('Content-Type', 'application/json');
         headers.append('Authorization', `${this.jwtToken}`);
         let options = new RequestOptions({ headers: headers });
 
-        return this.http.post(`http://localhost:3000/api/user/admin`, JSON.stringify(oAdmin), options)
+        return this.http.get(`http://localhost:3000/api/department`, options)
             .map((response: Response) => response.json())
             .catch(this.handleError);
     }
 
-
-    updateUser(userid, oUser) {
+    getAllAdminUser(dep) {
         let headers = new Headers();
         headers.append('Content-Type', 'application/json');
         headers.append('Authorization', `${this.jwtToken}`);
         let options = new RequestOptions({ headers: headers });
 
-        return this.http.put(`http://localhost:3000/api/user/${userid}`, JSON.stringify(oUser), options)
+        return this.http.get(`http://localhost:3000/api/getalladmin/${dep}`, options)
             .map((response: Response) => response.json())
             .catch(this.handleError);
     }
 
-    deleteUser(userid) {
+    deleteDepartment(_id) {
         let headers = new Headers();
         headers.append('Content-Type', 'application/json');
         headers.append('Authorization', `${this.jwtToken}`);
         let options = new RequestOptions({ headers: headers });
 
-        return this.http.delete(`http://localhost:3000/api/user/${userid}`, options)
+        return this.http.delete(`http://localhost:3000/api/deletedepartment/${_id}`, options)
             .map((response: Response) => response.json())
             .catch(this.handleError);
     }
 
-    updatePassword(userid, oUser) {
+    // Only for admin
+
+    saveDepartmentDate(_id, date) {
         let headers = new Headers();
         headers.append('Content-Type', 'application/json');
         headers.append('Authorization', `${this.jwtToken}`);
         let options = new RequestOptions({ headers: headers });
 
-        return this.http.put(`http://localhost:3000/api/password/${userid}`, JSON.stringify(oUser), options)
+        return this.http.put(`http://localhost:3000/api/department/${_id}`, JSON.stringify(date), options)
+            .map((response: Response) => response.json())
+            .catch(this.handleError);
+    }
+
+    saveDepartmentEnabled(_id) {
+        let headers = new Headers();
+        headers.append('Content-Type', 'application/json');
+        headers.append('Authorization', `${this.jwtToken}`);
+        let options = new RequestOptions({ headers: headers });
+
+        return this.http.put(`http://localhost:3000/api/department/isenabled/${_id}`, options)
+            .map((response: Response) => response.json())
+            .catch(this.handleError);
+    }
+
+    getDepartmentDate(_id) {
+        let headers = new Headers();
+        headers.append('Content-Type', 'application/json');
+        headers.append('Authorization', `${this.jwtToken}`);
+        let options = new RequestOptions({ headers: headers });
+
+        return this.http.get(`http://localhost:3000/api/department/${_id}`, options)
             .map((response: Response) => response.json())
             .catch(this.handleError);
     }

@@ -9,6 +9,7 @@ var config = require('./config');
 
 var user = require('./routes/user.js');
 var intern = require('./routes/intern.js');
+var department = require('./routes/department.js');
 
 var port = process.env.PORT || config.serverport;
 mongoose.connect(config.database, function (err) {
@@ -65,11 +66,19 @@ apiRoutes.get('/', function (req, res) {
   });
 });
 
-apiRoutes.get('/user/:id', user.getuserDetails); // API returns user details 
+// User Request
+
+apiRoutes.get('/user/:opt', user.getuserDetails); // API returns user details 
 
 apiRoutes.put('/user/:id', user.updateUser); // API updates user details
 
+apiRoutes.post('/user/admin', user.registerAdmin); // Register new admin or update for SuperAdmin
+
 apiRoutes.put('/password/:id', user.updatePassword); // API updates user password
+
+apiRoutes.delete('/user/:id', user.deleteUser); // This delete user, for SuperAdmin
+
+// Intern Request
 
 apiRoutes.delete('/intern/:id', intern.delintern); //API removes the expense details of given expense id
 
@@ -79,8 +88,23 @@ apiRoutes.get('/getintern_admin/:verified', intern.getintern_admin); // API retu
 
 apiRoutes.put('/confirmintern/:id', intern.confirmintern); // API returns expense details of given expense id
 
-apiRoutes.get('/interns/:option', intern.getinterns); // API returns all intern by time or any 
+apiRoutes.get('/interns/:option', intern.getinterns); // API returns all intern by time or any
 
+// Department Request
+
+apiRoutes.post('/department', department.saveDepartment); // Save or update dapartment
+
+apiRoutes.get('/department', department.getAllDepartment); // Get all department
+
+apiRoutes.get('/department/:id', department.getDepartmentDate); // Get department date for admin
+
+apiRoutes.put('/department/:id', department.saveDapartmentDate); // Save new department date
+
+apiRoutes.put('/department/isenabled/:id', department.saveDepartmentEnabled); // Enabled current department date
+
+apiRoutes.get('/getalladmin/:dep', department.getAllAdminUser); // Get all Admin user by null department
+
+apiRoutes.delete('/deletedepartment/:id', department.deleteDepartment); // Delete department by id
 
 // kick off the server 
 app.listen(port);

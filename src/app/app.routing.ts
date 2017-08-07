@@ -11,9 +11,6 @@ export const AppRoutes: Routes = [{
   path: '',
   component: AuthLayoutComponent,
   children: [{
-    path: '',
-    loadChildren: './landing/landing.module#LandingModule'
-  }, {
     path: 'user',
     resolve: [IsLoggedIn],
     loadChildren: './user/user.module#UserModule'
@@ -40,6 +37,15 @@ export const AppRoutes: Routes = [{
   }, {
     path: 'intern',
     loadChildren: './intern/intern.module#InternModule'
+  },{
+    path: 'departments',
+    loadChildren: './departments/departments.module#DepartmentsModule'
+  }, {
+    path: 'admins',
+    loadChildren: './admins/admins.module#AdminsModule'
+  }, {
+    path: 'dates',
+    loadChildren: './dates/dates.module#DatesModule'
   }]
 }, {
   path: '**',

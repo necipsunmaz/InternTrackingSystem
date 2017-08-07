@@ -13,16 +13,3 @@ export const DashboardRoutes: Routes = [{
     heading: 'Yönetim Paneli'
   }
 }];
-
-/**
- * {
-  path: 'appeals',
-  loadChildren: './appeals/appeals.module#AppealsModule'
-}, {
-  path: 'analyzes',
-  loadChildren: './analyzes/analyzes.module#AnalyzesModule'
-}, {
-  path: 'intern',
-  loadChildren: './intern/intern.module#InternModule'
-}
- */

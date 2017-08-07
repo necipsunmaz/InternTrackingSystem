@@ -29,14 +29,11 @@ export class AppealsComponent implements OnInit {
   form = new FormGroup({});
   radioItems = [ 'onaylanmayan', 'onaylanan'];
   model = { options: 'onaylanmayan' };
-  basildimi = false;
-
   button = this.radioItems[0];
 
   onSubmit(): void {
     console.log(this.model);
     this.fetchReport();
-    this.basildimi = true;
   }
 
    checkVerify(veris: string): boolean {
@@ -48,18 +45,10 @@ export class AppealsComponent implements OnInit {
     this.userObj = this.authService.currentUser;
     this.listRefresh();
   }
-
-  /**
-  checkVerify(veris: string): boolean {
-    if (veris == "Onaylananlar") { return true } else { return false };
-  }
-  */
   
   listRefresh() {
-    console.log(this.model);
     this.fetchReport();
-    this.basildimi = true;
-  }
+}
 
 
 

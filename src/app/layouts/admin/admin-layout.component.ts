@@ -76,24 +76,19 @@ export class AdminLayoutComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     let role = JSON.parse(localStorage.getItem('currentUser')).user.role;
     if (role != null) {
-      if (role === 'SuperAdmin') {
+      if (role === 0) {
         MENUITEMS = [];
         MENUITEMS.push(
           {
             state: 'dashboard',
             name: 'GİRİŞ',
             type: 'link',
-            icon: 'basic-accelerator'
+            icon: 'basic-home'
           }, {
             state: 'appeals',
             name: 'BAŞVURULAR',
             type: 'link',
             icon: 'basic-paperplane'
-          }, {
-            state: 'analyzes',
-            name: 'ANALİZLER',
-            type: 'link',
-            icon: 'ecommerce-graph1'
           }, {
             state: 'intern',
             name: 'STAJYER',
@@ -109,25 +104,35 @@ export class AdminLayoutComponent implements OnInit, OnDestroy {
               state: 'calendar',
               name: 'Devam/Devamsızlık Takvimi'
             }]
+          }, {
+            state: 'admins',
+            name: 'Yöneticiler',
+            type: 'link',
+            icon: 'basic-server'
+          }, {
+            state: 'departments',
+            name: 'Departmanlar',
+            type: 'link',
+            icon: 'basic-server'
+          }, {
+            state: 'analyzes',
+            name: 'ANALİZLER',
+            type: 'link',
+            icon: 'ecommerce-graph1'
           });
-      } else if (role === 'Admin') {
+      } else if (role === 1) {
         MENUITEMS = [];
         MENUITEMS.push(
           {
             state: 'dashboard',
             name: 'GİRİŞ',
             type: 'link',
-            icon: 'basic-accelerator'
+            icon: 'basic-home'
           }, {
             state: 'appeals',
             name: 'BAŞVURULAR',
             type: 'link',
             icon: 'basic-paperplane'
-          }, {
-            state: 'analyzes',
-            name: 'ANALİZLER',
-            type: 'link',
-            icon: 'ecommerce-graph1'
           }, {
             state: 'intern',
             name: 'STAJYER',
@@ -143,15 +148,27 @@ export class AdminLayoutComponent implements OnInit, OnDestroy {
               state: 'calendar',
               name: 'Devam/Devamsızlık Takvimi'
             }]
+          }, {
+            state: 'dates',
+            name: 'Tarihler',
+            type: 'link',
+            icon: 'basic-calendar'
+          }, {
+            state: 'analyzes',
+            name: 'ANALİZLER',
+            type: 'link',
+            icon: 'ecommerce-graph1'
           });
-      } else if (role === 'Acedemician') {
+      } else if (role === 2) {
         MENUITEMS = [];
         MENUITEMS.push({
           state: 'dashboard',
           name: 'GİRİŞ',
           type: 'link',
-          icon: 'basic-accelerator'
+          icon: 'basic-home'
         });
+      } else {
+        MENUITEMS = [];
       }
     }
 

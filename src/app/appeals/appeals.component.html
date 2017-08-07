@@ -9,7 +9,7 @@
   </div>
 
   <div class="table-responsive">
-    <table class="table align-middle mb-0" *ngIf="basildimi ===true">
+    <table class="table align-middle mb-0">
       <thead>
         <tr>
           <th>&nbsp;</th>
@@ -22,7 +22,7 @@
       <tbody>
         <tr *ngFor="let intern of interns;let rowIndex = index">
           <td>
-            <img src="https://randomuser.me/api/portraits/thumb/men/62.jpg" class="avatar-md rounded" alt="">
+            <img src="{{intern.photo}}" class="avatar-md rounded" alt="">
           </td>
           <td>
             <a href="#" class="d-block text-capitalize">{{intern.firstname}} {{intern.lastname}} </a>

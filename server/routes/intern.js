@@ -1,6 +1,7 @@
 var mongoose = require('mongoose');
 var Intern = require('../models/intern');
 var config = require('../config');
+var moment = require('moment');
 
 // Save Intern
 exports.saveintern = function (req, res, next) {
@@ -117,7 +118,12 @@ exports.confirmintern = function (req, res, next) {
                 var oneDay = 24 * 60 * 60 * 1000; // hours*minutes*seconds*milliseconds
                 var diffDays = Math.round(Math.abs((firstDate.getTime() - secondDate.getTime()) / (oneDay)));
                 for (var i = 0; i < diffDays; i++) {
-                    intern.days.push({ date: firstDate.getTime() + (i * 86400000), am: false, pm: false });
+                    let dt = firstDate.getTime() + (i * 86400000);
+                    let mnt = moment(dt).day();
+
+                    if(mnt !== 6 && mnt !== 0 ){
+                        intern.days.push({ date: dt, am: null, pm: null });     
+                    }                  
                 }
 
                 intern.save(function (err) {
@@ -125,7 +131,7 @@ exports.confirmintern = function (req, res, next) {
 
                     res.status(201).json({
                         success: true,
-                        message: 'Staj formu onaylandı. ' + diffDays.toString() + ' günlük yoklama listesi eklendi.'
+                        message: 'Staj formu onaylandı. Devam/Devamsızlık günleri eklendi.'
                     });
                 });
 

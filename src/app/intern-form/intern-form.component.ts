@@ -19,7 +19,7 @@ export class InternFormComponent implements OnInit {
 
 
   constructor(private fb: FormBuilder,
-    private userService: InternFormService,
+    private ınternService: InternFormService,
     private datePickerService: DatePickerService,
     public ngbDateParserFormatter: NgbDateParserFormatter,
     private router: Router,
@@ -50,7 +50,7 @@ export class InternFormComponent implements OnInit {
     this.internFormStep1.controls['photo'].setValue(true);
   }
 
-  // Gender Validation
+  // Gender SelectBox
   private genderValue: number = null;
   genders: Array<Object> = [
     { num: true, name: 'Erkek' },
@@ -186,7 +186,7 @@ export class InternFormComponent implements OnInit {
       theForm.endeddate = this.internFormStep2.value.endeddate;
 
 
-      this.userService.saveIntern(theForm)
+      this.ınternService.saveIntern(theForm)
         .subscribe(data => {
           if (data.success === false) {
             this.toastr.error(data.message);

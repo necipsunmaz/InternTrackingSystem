@@ -84,8 +84,7 @@ export class SignupComponent {
       let theForm = this.registerForm.value;
       theForm.dob = this.ngbDateParserFormatter.format(this.dobValue);
       theForm.department = this.departmentValue;
-      const thePass = this.registerForm.value.passwordGroup.password;
-      theForm.password = thePass;
+      theForm.password = this.registerForm.value.passwordGroup.password;
       delete theForm.passwordGroup;
 
       this.userService.register(theForm)

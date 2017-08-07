@@ -1,7 +1,7 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { RouterModule } from '@angular/router';
-import { NgModule } from '@angular/core';
+import { NgModule, LOCALE_ID } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { HttpModule, Http } from '@angular/http';
 
@@ -48,7 +48,7 @@ export function createTranslateLoader(http: Http) {
     NgbModule.forRoot(),
     SidebarModule.forRoot()
   ],
-  providers: [ToastrService, AuthService, AuthGuard, IsLoggedIn, IsAdmin, IsSuperAdmin, IsAcedemician],
+  providers: [ToastrService, AuthService, AuthGuard, IsLoggedIn, IsAdmin, IsSuperAdmin, IsAcedemician, { provide: LOCALE_ID, useValue: "tr-TR" }],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

@@ -31,59 +31,7 @@ export class DashboardComponent {
     nodes: any[]
   };
 
-  ngOnInit() {
-    // ROle
-/*
-    let role = JSON.parse(localStorage.getItem('currentUser')).user.role;
-    let routerConfig = this.router.config;
-    console.log(role);
-    if (role != null) {
-      switch (role) {
-
-        // If SuperAdmin
-        case 'SuperAdmin':
-          routerConfig[1].children.push({
-            path: 'appeals',
-            loadChildren: './appeals/appeals.module#AppealsModule'
-          }, {
-              path: 'analyzes',
-              loadChildren: './analyzes/analyzes.module#AnalyzesModule'
-            }, {
-              path: 'intern',
-              loadChildren: './intern/intern.module#InternModule'
-            });
-          // this.router.resetConfig(routerConfig);
-          break;
-
-        // If Admin
-        case 'Admin':
-          routerConfig[1].children.push({
-            path: 'appeals',
-            loadChildren: './appeals/appeals.module#AppealsModule'
-          }, {
-              path: 'analyzes',
-              loadChildren: './analyzes/analyzes.module#AnalyzesModule'
-            }, {
-              path: 'intern',
-              loadChildren: './intern/intern.module#InternModule'
-            });
-          // this.router.resetConfig(routerConfig);
-          break;
-
-        // If Acedemician
-        case 'Acedemician':
-          routerConfig[1].children.push({
-            path: 'dashboard',
-            loadChildren: './dashboard/dashboard.module#DashboardModule'
-          });
-          // this.router.resetConfig(routerConfig);
-          break;
-
-      }
-    }*/
-  }
-
-  dateData: any[];
+    dateData: any[];
   // options
   showXAxis = true;
   showYAxis = true;

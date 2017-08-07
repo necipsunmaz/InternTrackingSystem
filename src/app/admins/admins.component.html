@@ -1,0 +1,166 @@
+<div class="row">
+  <div class="col-lg-4">
+    <div class="card">
+      <div class="card-header">Yeni Yönetici Ekle</div>
+      <div class="card-block">
+        <p>Buradan yeni yönetici ekleyebilir ve düzenleyebilirsin.</p>
+        <div role="alert" *ngIf="_id.value" class="alert alert-info alert-dismissible">Kayıtlı yöneticilerin parolasını güncelleyemezsin.
+        </div>
+        <form [formGroup]="adminForm" (ngSubmit)="saveAdmin(adminForm.value)">
+
+          <div class="row">
+            <fieldset class="form-group  col-6 pull-left" [ngClass]="{'has-danger': adminForm.get('firstname').hasError('required') && adminForm.get('firstname').touched}">
+              <label for="firstname" class="form-control-label">
+          İsim
+        </label>
+              <input type="text" class="form-control" placeholder="Adınız" [formControl]="adminForm.get('firstname')" [ngClass]="{'form-control-danger': adminForm.get('firstname').hasError('required') && adminForm.get('firstname').touched}"
+              />
+              <div class="form-control-feedback" *ngIf="adminForm.get('firstname').hasError('required') && adminForm.get('firstname').touched">Adınız gerekli</div>
+            </fieldset>
+
+            <fieldset class="form-group  col-6 pull-right" [ngClass]="{'has-danger': adminForm.get('lastname').hasError('required') && adminForm.get('lastname').touched}">
+              <label for="lastname" class="form-control-label">
+          Soyisim
+        </label>
+              <input type="text" class="form-control" placeholder="Soyadınız" [formControl]="adminForm.get('lastname')" [ngClass]="{'form-control-danger': adminForm.get('lastname').hasError('required') && adminForm.get('lastname').touched}"
+              />
+              <div class="form-control-feedback" *ngIf="adminForm.get('lastname').hasError('required') && adminForm.get('lastname').touched">Soyadınız gerekli</div>
+            </fieldset>
+          </div>
+
+          <div class="row">
+            <fieldset class="form-group col-6 pull-left" [ngClass]="{'has-danger': adminForm.get('email').hasError('email') && adminForm.get('email').touched}">
+              <label for="email" class="form-control-label">
+          Eposta
+        </label>
+              <input type="text" class="form-control" placeholder="example@mail.com" [formControl]="adminForm.get('email')" [ngClass]="{'form-control-danger': adminForm.get('email').hasError('email') && adminForm.get('email').touched}"
+              />
+              <div class="form-control-feedback" *ngIf="adminForm.get('email').hasError('email') && adminForm.get('email').touched">Lütfen bir eposta girin</div>
+            </fieldset>
+
+            <fieldset class="form-group col-6 pull-right" [ngClass]="{'has-danger': adminForm.get('phone').hasError('required') && adminForm.get('phone').touched}">
+              <label for="phone" class="form-control-label">
+          Telefon
+        </label>
+              <input type="text" class="form-control" placeholder="+90 (555) 555-5555" [textMask]="{mask: mask}" [(ngModel)]="myModel"
+                [formControl]="adminForm.get('phone')" [ngClass]="{'form-control-danger': adminForm.get('phone').hasError('required') && adminForm.get('phone').touched}"
+              />
+              <div class="form-control-feedback" *ngIf="adminForm.get('phone').hasError('required') && adminForm.get('phone').touched">Telefon gerekli</div>
+            </fieldset>
+          </div>
+
+          <fieldset class="form-group" [ngClass]="{'has-danger': adminForm.get('username').hasError('required') && adminForm.get('username').touched}">
+            <label for="username" class="form-control-label">
+          Kullanıcı adı
+        </label>
+            <input type="text" class="form-control" placeholder="Kullanıcı adı" [formControl]="adminForm.get('username')" [ngClass]="{'form-control-danger': adminForm.get('username').hasError('required') && adminForm.get('username').touched}"
+            />
+
+            <div class="form-control-feedback" *ngIf="adminForm.get('username').touched && adminForm.get('username').errors">
+              <span class="col-sm-2"></span>
+              <span class="col-sm-10" style="padding:4px 0 0;color:red;" *ngIf="adminForm.get('username').hasError('required') && adminForm.get('username').touched">
+                   Kullanıcı adı gerekli
+                </span>
+              <span class="col-sm-10" style="padding:4px 0 0;color:red;" *ngIf="adminForm.get('username').errors.minlength">
+                    Kullanıcı adı 3 karakterden fazla olmalı
+                </span>
+              <span class="col-sm-10" style="padding:4px 0 0;color:red;" *ngIf="adminForm.get('username').errors.maxlength">
+                    Kullanıcı adı 16 karakterden fazla olmamalı
+                </span>
+            </div>
+          </fieldset>
+
+          <div formGroupName="passwordGroup" [ngClass]="{'has-error': adminForm.get('passwordGroup').errors }">
+            <fieldset class="form-group" [ngClass]="{'has-error': adminForm.get('passwordGroup.password').invalid && adminForm.get('passwordGroup.password').dirty}">
+              <label for="password">
+          Parola
+        </label>
+              <input type="password" class="form-control" placeholder="********" [formControl]="password" />
+              <div class="form-control-feedback" *ngIf="{'has-error': adminForm.get('passwordGroup.password').invalid && adminForm.get('passwordGroup.password').dirty && adminForm.get('passwordGroup.password').touched}">
+                <span class="col-sm-10" style="padding:4px 0 0;color:red;" *ngIf="adminForm.get('passwordGroup.password').hasError('required') && adminForm.get('passwordGroup.password').touched">
+                        Parola gerekli
+                    </span>
+                <span class="col-sm-10" style="padding:4px 0 0;color:red;" *ngIf="adminForm.get('passwordGroup.password').errors?.pattern">
+                        Parola harf, sayı & özel karakter içermelidir
+                    </span>
+              </div>
+            </fieldset>
+
+            <fieldset class="form-group" [ngClass]="{'has-error': adminForm.get('passwordGroup.retypepass').invalid && adminForm.get('passwordGroup.retypepass').dirty}">
+              <label for="password">
+          Parola Tekrar
+        </label>
+              <input type="password" class="form-control" placeholder="********" [formControl]="retypepass" />
+              <div class="form-control-feedback" *ngIf="(adminForm.get('passwordGroup.retypepass').touched || adminForm.get('passwordGroup.retypepass').dirty) && (adminForm.get('passwordGroup.retypepass').errors || adminForm.get('passwordGroup').errors)">
+                <span class="col-sm-2"></span>
+                <span class="col-sm-10" style="padding:4px 0 0;color:red;" *ngIf="adminForm.get('passwordGroup.retypepass').errors?.required">
+                        Parolayı doğrulayın
+                    </span>
+                <span class="col-sm-10" style="padding:4px 0 0;color:red;" *ngIf="adminForm.get('passwordGroup').errors?.mismatchedPassword">
+                        Parolalar birbiri ile eşleşmiyor
+                    </span>
+              </div>
+            </fieldset>
+          </div>
+          <label class="custom-control custom-checkbox mb-1">
+        <input type="checkbox" class="custom-control-input">
+        <span class="custom-control-indicator"></span>
+        <span class="custom-control-description">Kullanıcı sözleşmesi okudum ve onaylıyorum.</span>
+      </label>
+          <div class="block mb-3"></div>
+          <button class="btn btn-primary" type="submit" [disabled]="adminForm.invalid">KAYIT</button>
+          <button class="btn btn-danger" type="reset" (click)="resetForm();">İPTAL</button>
+        </form>
+      </div>
+    </div>
+  </div>
+
+
+  <div class="col-lg-8">
+    <div class="card">
+      <div class="card-header">Tüm Yöneticilerin Listesi</div>
+      <div class="card-block">
+        <p>Buradan ekli olan yöneticileri görebilir, düzenleyebilir ve silebilirsin.</p>
+        <div role="alert" class="alert alert-danger alert-dismissible">Dikkat! Departmanı silmeniz, yöneticisini ve departmana ait kayıtlı olan tüm stajyerlerin silinmesine neden olur.
+        </div>
+      </div>
+      <div class="table-responsive">
+        <table class="table align-middle mb-0">
+          <thead>
+            <tr>
+              <th>Adı</th>
+              <th>Kullanıcı Adı</th>
+              <th>Telefon</th>
+              <th>Eposta</th>
+              <th>İşlemler</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let admin of admins;let rowIndex = index">
+              <td>
+                {{admin.firstname}} {{admin.lastname}}
+              </td>
+              <td>
+                {{admin.username}}
+              </td>
+              <td>
+                {{admin.phone}}
+              </td>
+              <td>
+                {{admin.email}}
+              </td>
+              <td>
+                <button type="button" class="btn btn-success" aria-label="View" (click)="updateAdmin(admin);">
+                                    <span class="glyphicon glyphicon-eye-open" aria-hidden="true">Düzenle</span>
+                                </button>
+                <button type="button" class="btn btn-danger" aria-label="View" (click)="deleteAdmin(admin._id, rowIndex);">
+                                    <span class="glyphicon glyphicon-eye-open" aria-hidden="true">Sil!</span>
+                                </button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>

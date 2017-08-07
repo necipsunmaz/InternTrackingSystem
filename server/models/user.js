@@ -6,14 +6,14 @@ const UserSchema = new Schema({
     firstname: {type:String},
     lastname: {type:String},
     email : {type:String},
-    img: {data:Buffer, contentType:String},
+    photo: {data:Buffer, contentType:String},
     username: {type:String},
     password: {type:String},
     dob: {type:Date},
     phone: {type:String},
-    department: {type: String},
+    department: Schema.Types.ObjectId,
     isEnabled: {type: Boolean, default: false},
-    role: {type: String, default: 'academician'}
+    role: {type: Number, default: 2}
 });
 
 // if role is true then user's role READ and WRITE, else its just READ.

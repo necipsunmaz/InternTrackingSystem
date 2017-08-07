@@ -1,0 +1,102 @@
+<div class="row">
+  <div class="col-lg-4">
+    <div class="card">
+      <div class="card-header">Yeni Departman Ekle</div>
+      <div class="card-block">
+        <p>Buradan yeni departman ekleyebilir, düzenleyebilir ve her departmana yönetici atayabilirisin.</p>
+        <form [formGroup]="departmentForm" (ngSubmit)="saveIntern(departmentForm.value)">
+
+          <fieldset class="form-group" [ngClass]="{'has-danger': departmentForm.get('name').hasError('required') && departmentForm.get('name').touched}">
+            <label for="name" class="form-control-label">
+          Departman Adı
+        </label>
+            <input type="text" class="form-control" placeholder="Departman Adı" [formControl]="departmentForm.get('name')" [ngClass]="{'form-control-danger': departmentForm.get('name').hasError('required') && departmentForm.get('name').touched}"
+            />
+            <div class="form-control-feedback" *ngIf="departmentForm.get('name').hasError('required') && departmentForm.get('name').touched">Departman adı gerekli</div>
+          </fieldset>
+
+          <fieldset class="form-group" [ngClass]="{'has-danger': departmentForm.get('admin').hasError('required') && departmentForm.get('admin').touched}">
+            <label for="admin" class="form-control-label">
+          Departman Yöneticisi
+        </label>
+            <select type="number" class="form-control" [(ngModel)]="adminValue" [formControl]="departmentForm.get('admin')">
+                <option [ngValue]="null" disabled="true" [selected]="!adminValue">-- Yönetici --</option>
+                <option *ngFor="let adm of admins" [ngValue]="adm._id">{{adm.firstname}} {{adm.lastname}} </option>
+              </select>
+            <div class="form-control-feedback" *ngIf="departmentForm.get('admin').hasError('required') && departmentForm.get('admin').touched">Bu alan gerekli</div>
+          </fieldset>
+
+          <fieldset class="form-group" [ngClass]="{'has-danger': departmentForm.get('phone').hasError('required') && departmentForm.get('phone').touched}">
+            <label for="phone" class="form-control-label">
+          Departman Telefon
+        </label>
+            <input type="text" class="form-control" placeholder="+90 (555) 555-5555" [textMask]="{mask: mask}" [(ngModel)]="myModel"
+              [formControl]="departmentForm.get('phone')" [ngClass]="{'form-control-danger': departmentForm.get('phone').hasError('required') && departmentForm.get('phone').touched}"
+            />
+            <div class="form-control-feedback" *ngIf="departmentForm.get('phone').hasError('required') && departmentForm.get('phone').touched">Telefon gerekli</div>
+          </fieldset>
+
+          <fieldset class="form-group" [ngClass]="{'has-danger': departmentForm.get('email').hasError('email') && departmentForm.get('email').touched}">
+            <label for="email" class="form-control-label">
+          Eposta
+        </label>
+            <input type="text" class="form-control" placeholder="example@mail.com" [formControl]="departmentForm.get('email')" [ngClass]="{'form-control-danger': departmentForm.get('email').hasError('email') && departmentForm.get('email').touched}"
+            />
+            <div class="form-control-feedback" *ngIf="departmentForm.get('email').hasError('email') && departmentForm.get('email').touched">Lütfen bir eposta girin</div>
+          </fieldset>
+
+          <button type="submit" [disabled]="departmentForm.invalid" class="btn btn-primary pull-right">Kaydet</button>
+        </form>
+      </div>
+    </div>
+  </div>
+
+
+  <div class="col-lg-8">
+    <div class="card">
+      <div class="card-header">Tüm Departmanların Listesi</div>
+      <div class="card-block">
+        <p>Buradan ekli olan departmanları görebilir, düzenleyebilir ve silebilirsin.</p>
+        <div role="alert" class="alert alert-danger alert-dismissible">Dikkat! Departmanı silmeniz, yöneticisini ve departmana ait kayıtlı olan tüm stajyerlerin silinmesine neden olur.
+        </div>
+      </div>
+      <div class="table-responsive">
+        <table class="table align-middle mb-0">
+          <thead>
+            <tr>
+              <th>Departman Adı</th>
+              <th>Yönetici</th>
+              <th>Telefon</th>
+              <th>Eposta</th>
+              <th>İşlemler</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let department of departments;let rowIndex = index">
+              <td>
+                {{department.name}}
+              </td>
+              <td>
+                {{department.username}}
+              </td>
+              <td>
+                {{department.phone}}
+              </td>
+              <td>
+                {{department.email}}
+              </td>
+              <td>
+                <button type="button" class="btn btn-success" aria-label="View" (click)="updateDepartment(department);">
+                                    <span class="glyphicon glyphicon-eye-open" aria-hidden="true">Düzenle</span>
+                                </button>
+                <button type="button" class="btn btn-danger" aria-label="View" (click)="deleteDepartment(department._id, rowIndex);">
+                                    <span class="glyphicon glyphicon-eye-open" aria-hidden="true">Sil!</span>
+                                </button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
