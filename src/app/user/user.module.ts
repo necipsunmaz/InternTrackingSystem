@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
-import { DatePickerService, I18n } from '../datepicker/datePicker.service';
+import { DatePickerService, I18n } from '../common/datePicker.service';
 import { TextMaskModule } from 'angular2-text-mask';
 
 import { SigninComponent } from './signin/signin.component';

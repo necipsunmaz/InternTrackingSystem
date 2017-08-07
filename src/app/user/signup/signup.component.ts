@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { FormBuilder, FormGroup, Validators, FormControl, AbstractControl } from '@angular/forms';
 
-import { DatePickerService, I18n } from '../../datepicker/datePicker.service'
+import { DatePickerService, I18n } from '../../common/datePicker.service'
 import { NgbDateStruct, NgbDatepickerI18n, NgbDateParserFormatter } from '@ng-bootstrap/ng-bootstrap';
 import { ToastrService } from '../../common/toastr.service'
 import { UserService } from '../user.service';
