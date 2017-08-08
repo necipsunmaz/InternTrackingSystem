@@ -12,7 +12,7 @@ import { InternFormComponent } from './intern-form.component';
 //import { ForgotComponent } from './forgot/forgot.component';
 import { AuthGuard } from '../user/auth-guard.service';
 import { AuthService } from '../user/auth.service';
-import { InternFormService } from './intern-form.service';
+import { DepartmentsService } from '../departments/departments.service';
 import { FormWizardModule } from 'angular2-wizard';
 
 
@@ -39,7 +39,7 @@ import { FormWizardModule } from 'angular2-wizard';
     I18n,
     AuthService,
     AuthGuard,
-    InternFormService
+    DepartmentsService
   ],
   bootstrap: [InternFormComponent]
 })

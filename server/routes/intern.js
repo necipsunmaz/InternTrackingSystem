@@ -122,7 +122,7 @@ exports.confirmintern = function (req, res, next) {
                     let mnt = moment(dt).day();
 
                     if(mnt !== 6 && mnt !== 0 ){
-                        intern.days.push({ date: dt, am: null, pm: null });     
+                        intern.days.unshift({ date: dt, am: null, pm: null });     
                     }                  
                 }
 

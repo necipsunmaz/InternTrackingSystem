@@ -7,7 +7,8 @@ var config = require('../config');
 var MongoDB = require('mongodb');
 
 
-// Only for SuperAdmin
+/////////////////// Only for Super Admin  /////////////////////////
+
 exports.saveDepartment = function (req, res, next) {
   if (req.decoded._doc.role === 0) {
     const _id = req.body._id;
@@ -239,8 +240,7 @@ exports.getAllAdminUser = function (req, res, next) {
   }
 }
 
-exports.getAllDepartment = function (req, res, next) {
-  if (req.decoded._doc.role === 0) {
+exports.getAllDepartments = function (req, res, next) {
     Department.find(function (err, department) {
       if (err) {
         res.status(400).json({
@@ -254,13 +254,6 @@ exports.getAllDepartment = function (req, res, next) {
         data: department
       });
     });
-  } else {
-    res.status(401).json({
-      success: false,
-      message: 'Yetkisiz erişim!'
-    });
-  }
-
 }
 
 exports.deleteDepartment = function (req, res, next) {
@@ -320,21 +313,17 @@ exports.deleteDepartment = function (req, res, next) {
 }
 
 
-// Only for admin
+/////////////////// Only for admin /////////////////////////
+
+
 exports.saveDapartmentDate = function (req, res, next) {
   if (req.decoded._doc.role === 1) {
     const _id = req.params.id;
     const starteddate = req.body.starteddate;
     const endeddate = req.body.endeddate;
-    var a = [];
-    if (!_id || !starteddate || !endeddate) {
-      return res.status(422).send({
-        success: false,
-        message: 'Veriler geçerli değil veya doğrulanmadı.'
-      });
-    }
+    var dateArray = [];
 
-    Department.findById(_id).exec(function (err, department) {
+    Department.findById(req.decoded._doc.department).exec(function (err, department) {
       if (err) {
         res.status(400).json({
           success: false,
@@ -342,15 +331,32 @@ exports.saveDapartmentDate = function (req, res, next) {
         });
       }
 
-      department.date.forEach(function(element) {
-        if(element !== null)a.push(element);
+      department.dates.forEach(function (element) {
+        if (element != null) {
+          if (_id != 0 && element.id == _id) {
+            if (element.isEnabled) {
+              element.isEnabled = false;
+            } else {
+              element.isEnabled = true;
+            }
+            dateArray.push(element);
+          } else if (_id == 1 && element._id == req.body._id) {
+            console.log('delete this date: '+ req.body._id);
+          } else {
+            dateArray.push(element);
+          }
+        }
       }, this);
-      a.push({
-        starteddate:starteddate,
-        endeddate:endeddate,
-        isEnabled:true
-      });
-      department.date = a;
+
+      if (_id == 0) {
+        dateArray.unshift({
+          starteddate: starteddate,
+          endeddate: endeddate,
+          isEnabled: true
+        });
+      }
+
+      department.dates = dateArray;
       department.save(function (err) {
         if (err) {
           res.status(400).json({
@@ -361,59 +367,11 @@ exports.saveDapartmentDate = function (req, res, next) {
 
         res.status(201).json({
           success: true,
-          message: department.name + ' departmanına yeni tarih bilgisi başarıyla eklendi.'
+          message: department.name + ' departmanı başarıyla güncelleştirildi.'
         });
       });
+
     });
-
-  } else {
-    res.status(401).json({
-      success: false,
-      message: 'Yetkisiz erişim!'
-    });
-  }
-}
-
-exports.saveDepartmentEnabled = function (req, res, next) {
-  if (req.decoded._doc.role === 1) {
-    const _id = req.params.id;
-    const department = req.decoded._doc.department;
-
-    if (!_id) {
-      return res.status(422).send({
-        success: false,
-        message: 'Veriler geçerli değil veya doğrulanmadı.'
-      });
-    }
-
-    Department.findOne({_id:_id}), function (err, department) {
-      if (err) {
-        res.status(400).json({
-          success: false,
-          message: 'İşlem hataya uğradı! Hata: ' + err
-        });
-      }
-      if (department) {
-        if (department.isEnabled) {
-          department.isEnabled = false
-        }
-        department.isEnabled = true
-      }
-
-      department.save(function (err) {
-        if (err) {
-          res.status(400).json({
-            success: false,
-            message: 'İşlem hataya uğradı! Hata: ' + err
-          });
-        }
-
-        res.status(201).json({
-          success: true,
-          message: 'İşlem başarıyla gerçekleşti.'
-        });
-      });
-    }
 
   } else {
     res.status(401).json({
@@ -425,7 +383,7 @@ exports.saveDepartmentEnabled = function (req, res, next) {
 
 exports.getDepartmentDate = function (req, res, next) {
   if (req.decoded._doc.role === 1) {
-    const _id = req.params.id;
+    const _id = req.decoded._doc.department;
     if (!_id) {
       return res.status(422).send({
         success: false,
@@ -442,7 +400,7 @@ exports.getDepartmentDate = function (req, res, next) {
       if (department) {
         res.status(200).json({
           success: true,
-          data: department.date
+          data: department.dates
         });
       }
     });

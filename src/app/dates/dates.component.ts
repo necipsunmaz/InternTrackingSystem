@@ -127,7 +127,7 @@ export class DatesComponent implements OnInit {
       theForm.endeddate = this.edate;
       delete theForm.dateRange;
 
-      this.departmentService.saveDepartmentDate(this.authService.currentUser.department, theForm)
+      this.departmentService.saveDepartmentDate(0, theForm)
         .subscribe(data => {
           if (data.success === false) {
             this.toastr.error(data.message);
@@ -146,7 +146,7 @@ export class DatesComponent implements OnInit {
 
 
   fetchReport() {
-    this.departmentService.getDepartmentDate(this.authService.currentUser.department).subscribe(data => {
+    this.departmentService.getDepartmentDate().subscribe(data => {
       if (data.success === false) {
         if (data.errcode) {
           this.authService.logout();
@@ -154,35 +154,35 @@ export class DatesComponent implements OnInit {
         }
         this.toastr.error(data.message);
       } else {
-        console.log(data.data);
-        var arr = Object.keys(data.data).map(function (key) { return data.data[key]; })
-        this.dates = arr;
+        this.dates = data.data;
       }
     });
   }
 
   updateDepartmentDates(_id) {
-    this.departmentService.saveDepartmentEnabled(_id).subscribe(message => {
-      if (message.success === false) {
-        this.toastr.error(message.message);
+    let theForm = { starteddate: null, endeddate: null };
+    this.departmentService.saveDepartmentDate(_id, theForm).subscribe(data => {
+      if (data.success === false) {
+        this.toastr.error(data.message);
       } else {
-        this.toastr.success(message.message);
+        this.toastr.success(data.message);
         this.fetchReport();
       }
     });
   }
 
   deleteDepartment(_id, rowIndex: number) {
-    this.departmentService.deleteDepartment(_id).subscribe(message => {
-      if (message.success === false) {
-        if (message.errcode) {
+    let theForm = { _id:_id, starteddate: null, endeddate: null };
+    this.departmentService.saveDepartmentDate(1, theForm).subscribe(date => {
+      if (date.success === false) {
+        if (date.errcode) {
           this.authService.logout();
           this.router.navigate(['login']);
         }
-        this.toastr.error(message.message);
+        this.toastr.error(date.message);
       } else {
-        this.toastr.success(message.message);
-        // this.departments.splice(rowIndex, 1);
+        this.toastr.success(date.message);
+        this.dates.splice(rowIndex, 1);
         this.changeDetectorRef.detectChanges();
       }
     })

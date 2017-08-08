@@ -124,7 +124,7 @@
         </wizard-step>
 
 
-        <wizard-step [title]="'Staj'" [icon]="'graduation-cap'" [isValid]="internFormStep2.valid" (onNext)="onStep2Next($event)">
+        <wizard-step [title]="'Staj'" [icon]="'graduation-cap'" [isValid]="internFormStep2.valid && internFormStep1.valid" (onNext)="onStep2Next($event)">
           <form [formGroup]="internFormStep2" novalidate (ngSubmit)="saveIntern(internFormStep2.value, internFormStep1.value)">
 
             <fieldset class="form-group" [ngClass]="{'has-danger': internFormStep2.get('department').hasError('required') && internFormStep2.get('department').touched}">
@@ -134,7 +134,7 @@
               <select type="text" #selectDepartment class="form-control" [(ngModel)]="SelectedValue" (change)='toDefaultTime(selectDepartment.value)'
                 [formControl]="internFormStep2.get('department')">
                 <option value="" disabled="true" [selected]="!date">-- Departman --</option>
-                <option *ngFor="let dep of departments" [ngValue]="dep.dateRange">{{dep.name}}</option>
+                <option *ngFor="let dep of departments" [ngValue]="dep.starteddate">{{dep.name}}</option>
               </select>
               <div class="form-control-feedback" *ngIf="internFormStep2.get('department').hasError('required') && internFormStep2.get('department').touched">Bu alan gerekli</div>
             </fieldset>
@@ -157,7 +157,7 @@
           </form>
         </wizard-step>
 
-        <wizard-step [title]="'Onay'" [icon]="'check'" [isValid]="internFormStep3.valid" (onComplete)="onComplete($event)">
+        <wizard-step [title]="'Onay'" [icon]="'check'" [isValid]="internFormStep3.valid && internFormStep2.valid && internFormStep1.valid" (onComplete)="onComplete($event)">
           <h1>Tebrikler.</h1>
           <p class="lead">Tüm bilgileri başarı ile ve eksiksiz olarak girdiniz. <br>Son bir aşama olarak bu bilgilerin size ait olduğunu
             onaylamanız gerekmektedir.

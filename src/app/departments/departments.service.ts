@@ -30,17 +30,6 @@ export class DepartmentsService {
             .catch(this.handleError);
     }
 
-    getDepartment() {
-        let headers = new Headers();
-        headers.append('Content-Type', 'application/json');
-        headers.append('Authorization', `${this.jwtToken}`);
-        let options = new RequestOptions({ headers: headers });
-
-        return this.http.get(`http://localhost:3000/api/department`, options)
-            .map((response: Response) => response.json())
-            .catch(this.handleError);
-    }
-
     getAllAdminUser(dep) {
         let headers = new Headers();
         headers.append('Content-Type', 'application/json');
@@ -76,24 +65,13 @@ export class DepartmentsService {
             .catch(this.handleError);
     }
 
-    saveDepartmentEnabled(_id) {
+    getDepartmentDate() {
         let headers = new Headers();
         headers.append('Content-Type', 'application/json');
         headers.append('Authorization', `${this.jwtToken}`);
         let options = new RequestOptions({ headers: headers });
 
-        return this.http.put(`http://localhost:3000/api/department/isenabled/${_id}`, options)
-            .map((response: Response) => response.json())
-            .catch(this.handleError);
-    }
-
-    getDepartmentDate(_id) {
-        let headers = new Headers();
-        headers.append('Content-Type', 'application/json');
-        headers.append('Authorization', `${this.jwtToken}`);
-        let options = new RequestOptions({ headers: headers });
-
-        return this.http.get(`http://localhost:3000/api/department/${_id}`, options)
+        return this.http.get(`http://localhost:3000/api/department`, options)
             .map((response: Response) => response.json())
             .catch(this.handleError);
     }
@@ -101,5 +79,25 @@ export class DepartmentsService {
     private handleError(error: Response) {
         console.error(error);
         return Observable.throw(error.json().error || 'Server error');
+    }
+
+    // Only for Intern Form
+
+    saveIntern(oIntern) {
+        let headers = new Headers({ 'Content-Type': 'application/json' });
+        let options = new RequestOptions({ headers: headers });
+
+        return this.http.post('http://localhost:3000/intern', JSON.stringify(oIntern), options)
+            .map((response: Response) => response.json())
+            .catch(this.handleError);
+    }
+
+    getAllDepartments() {
+        let headers = new Headers({ 'Content-Type': 'application/json' });
+        let options = new RequestOptions({ headers: headers });
+
+        return this.http.get(`http://localhost:3000/departments`, options)
+            .map((response: Response) => response.json())
+            .catch(this.handleError);
     }
 }

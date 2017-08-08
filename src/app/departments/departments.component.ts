@@ -91,7 +91,7 @@ export class DepartmentsComponent implements OnInit {
         this.admins = data.data;
       }
     });
-    this.departmentService.getDepartment()
+    this.departmentService.getAllDepartments()
       .subscribe(data => {
         if (data.success === false) {
           if (data.errcode) {

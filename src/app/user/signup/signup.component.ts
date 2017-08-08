@@ -87,6 +87,8 @@ export class SignupComponent {
       theForm.password = this.registerForm.value.passwordGroup.password;
       delete theForm.passwordGroup;
 
+      console.log(theForm);
+
       this.userService.register(theForm)
         .subscribe(data => {
           if (data.success === false) {

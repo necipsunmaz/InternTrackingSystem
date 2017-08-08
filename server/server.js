@@ -50,6 +50,8 @@ app.post('/register', user.signup); // Register user
 
 app.post('/intern', intern.saveintern); // adds & update expense of the user
 
+app.get('/departments', department.getAllDepartments); // Get all department
+
 // express router
 var apiRoutes = express.Router();
 
@@ -94,13 +96,9 @@ apiRoutes.get('/interns/:option', intern.getinterns); // API returns all intern 
 
 apiRoutes.post('/department', department.saveDepartment); // Save or update dapartment
 
-apiRoutes.get('/department', department.getAllDepartment); // Get all department
-
-apiRoutes.get('/department/:id', department.getDepartmentDate); // Get department date for admin
+apiRoutes.get('/department', department.getDepartmentDate); // Get department date for admin
 
 apiRoutes.put('/department/:id', department.saveDapartmentDate); // Save new department date
-
-apiRoutes.put('/department/isenabled/:id', department.saveDepartmentEnabled); // Enabled current department date
 
 apiRoutes.get('/getalladmin/:dep', department.getAllAdminUser); // Get all Admin user by null department
 

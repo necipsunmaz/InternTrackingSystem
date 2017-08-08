@@ -13,7 +13,7 @@ const DepartmentSchema = new Schema({
     admin: Schema.Types.ObjectId,
     phone: {type: String, required: true},
     email: {type: String, required: true},
-    date: [DateSchema]
+    dates: [DateSchema]
 });
 
 module.exports = mongoose.model('departments', DepartmentSchema, 'departments');

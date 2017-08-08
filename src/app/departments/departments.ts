@@ -4,5 +4,10 @@ export interface Departments {
     phone: string,
     admin: string,
     username: string,
-    email: string
+    email: string,
+    dates: [{
+        starteddate: Date,
+        endeddate: Date,
+        isEnabled: boolean
+    }]
 }
