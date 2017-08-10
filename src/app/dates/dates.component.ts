@@ -1,24 +1,25 @@
 import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
-import { AuthService } from '../user/auth.service';
-import { DatePipe } from '@angular/common';
 import { Router, ActivatedRoute, Params } from '@angular/router';
 import { ToastrService } from '../common/toastr.service';
 import { DepartmentsService } from '../departments/departments.service';
 import { Dates } from './dates';
 import { FormBuilder, FormGroup, Validators, FormControl, AbstractControl } from '@angular/forms';
 import { NgbDateParserFormatter } from '@ng-bootstrap/ng-bootstrap';
-import { IMyDrpOptions, IMyDateRangeModel, IMyDefaultMonth, IMyDateRange, IMyInputFieldChanged, IMyCalendarViewChanged, IMyDateSelected } from 'mydaterangepicker';
+import { ConfirmComponent } from '../common/confirm.component';
+import { DialogService } from "ng2-bootstrap-modal";
+import { IMyDrpOptions, IMyDateRangeModel } from 'mydaterangepicker';
 
 @Component({
   selector: 'app-list',
   templateUrl: './dates.component.html',
-  styleUrls: ['./dates.component.scss']
+  styleUrls: ['./dates.component.scss'],
+  providers: [DialogService]
 })
 export class DatesComponent implements OnInit {
   constructor(private fb: FormBuilder,
-    private authService: AuthService,
     private departmentService: DepartmentsService,
-    public ngbDateParserFormatter: NgbDateParserFormatter,
+    private ngbDateParserFormatter: NgbDateParserFormatter,
+    private dialogService: DialogService,
     private route: ActivatedRoute,
     private router: Router,
     private toastr: ToastrService,
@@ -27,43 +28,7 @@ export class DatesComponent implements OnInit {
 
   // Departments List Array
   dates: Dates[];
-
-  //Department Validation
-  SelectedValue: string = '2016-11-11&2017-11-11';
   toDay = new Date();
-  toDefaultTime(selected) {
-    let copy = this.getCopyOfOptions();
-
-    copy.disableSince = selected ? {
-      year: new Date(this.SelectedValue.split('&')[0]).getFullYear(),
-      month: new Date(this.SelectedValue.split('&')[0]).getMonth(),
-      day: new Date(this.SelectedValue.split('&')[0]).getDate()
-    } : {
-        year: 0,
-        month: 0,
-        day: 0
-      };
-    this.myDateRangePickerOptionsInline = copy;
-
-
-    copy.enableDates = selected ? [{
-      year: new Date(this.SelectedValue.split('&')[0]).getFullYear(),
-      month: new Date(this.SelectedValue.split('&')[0]).getMonth() - 3,
-      day: new Date(this.SelectedValue.split('&')[0]).getDate()
-    }] : [{
-      year: new Date(this.SelectedValue.split('&')[1]).getFullYear(),
-      month: new Date(this.SelectedValue.split('&')[1]).getMonth() - 3,
-      day: new Date(this.SelectedValue.split('&')[1]).getDate()
-    }];
-    this.myDateRangePickerOptionsInline = copy;
-/*
-    copy.disableSince = selected ? {
-      year: new Date(this.SelectedValue.split('&')[1]).getFullYear(),
-      month: new Date(this.SelectedValue.split('&')[1]).getMonth(),
-      day: new Date(this.SelectedValue.split('&')[1]).getDate()
-    } : { year: 0, month: 0, day: 0 };
-    this.myDateRangePickerOptionsInline = copy;
- */ }
 
   //************************** */
   private myDateRangePickerOptionsInline: IMyDrpOptions = {
@@ -77,7 +42,6 @@ export class DatesComponent implements OnInit {
     inline: true,
     minYear: this.toDay.getFullYear() - 2,
     maxYear: this.toDay.getFullYear() + 2,
-    //enableDates: [{year: 2016, month: 11, day: 14}, {year: 2016, month: 11, day: 15}],
     selectorHeight: '530px',
     height: '530px',
     width: '100%',
@@ -85,15 +49,12 @@ export class DatesComponent implements OnInit {
     showSelectDateText: true
   };
 
-  sdate = new Date();
-  edate = new Date();
+  sdate: Date;
+  edate: Date;
 
   onDateRangeChanged(event: IMyDateRangeModel) {
-    this.sdate.setDate(event.beginJsDate.getDate());
-    this.edate.setDate(event.endJsDate.getDate());
-    //console.log('onDateRangeChanged(): Begin date: ', event.beginDate, ' End date: ', event.endDate);
-    //console.log('onDateRangeChanged(): Formatted: ', event.formatted + event.beginJsDate + "--" + event.endJsDate);
-    //console.log('onDateRangeChanged(): BeginEpoc timestamp: ', event.beginEpoc, ' - endEpoc timestamp: ', event.endEpoc);
+    this.sdate = event.beginJsDate;
+    this.edate = event.endJsDate;
   }
 
   getCopyOfOptions(): IMyDrpOptions {
@@ -102,22 +63,18 @@ export class DatesComponent implements OnInit {
   //****************************************************** */
 
 
-  _id = new FormControl('', [Validators.pattern('^[0-9a-fA-F]{24}$')]);
   dateRange = new FormControl('', [Validators.required]);
 
   datesForm: FormGroup = this.fb.group({
-    _id: this._id,
     dateRange: this.dateRange
   });
 
   onSubmit(): void {
     this.fetchReport();
-    //this.toDefaultTime(this.SelectedValue);
   }
 
   ngOnInit() {
     this.fetchReport();
-    // this.toDefaultTime(this.SelectedValue);
   }
 
   saveDepartmentDates(formdata: any): void {
@@ -148,13 +105,31 @@ export class DatesComponent implements OnInit {
   fetchReport() {
     this.departmentService.getDepartmentDate().subscribe(data => {
       if (data.success === false) {
-        if (data.errcode) {
-          this.authService.logout();
-          this.router.navigate(['login']);
-        }
         this.toastr.error(data.message);
       } else {
         this.dates = data.data;
+        let copy = this.getCopyOfOptions();
+        let arr = [];
+        data.data.forEach(element => {
+          if (element.isEnabled) {
+            let b = new Date(element.starteddate);
+            let e = new Date(element.endeddate);
+            arr.push({
+              beginDate: {
+                year: b.getFullYear(),
+                month: b.getMonth() + 1,
+                day: b.getDate()
+              },
+              endDate: {
+                year: e.getFullYear(),
+                month: e.getMonth() + 1,
+                day: e.getDate()
+              }
+            });
+          }
+        });
+        copy.disableDateRanges = arr;
+        this.myDateRangePickerOptionsInline = copy;
       }
     });
   }
@@ -171,20 +146,25 @@ export class DatesComponent implements OnInit {
     });
   }
 
-  deleteDepartment(_id, rowIndex: number) {
-    let theForm = { _id:_id, starteddate: null, endeddate: null };
-    this.departmentService.saveDepartmentDate(1, theForm).subscribe(date => {
-      if (date.success === false) {
-        if (date.errcode) {
-          this.authService.logout();
-          this.router.navigate(['login']);
-        }
-        this.toastr.error(date.message);
-      } else {
-        this.toastr.success(date.message);
-        this.dates.splice(rowIndex, 1);
-        this.changeDetectorRef.detectChanges();
+  deleteDepartmentDate(_id, rowIndex: number) {
+    let disposable = this.dialogService.addDialog(ConfirmComponent, {
+      title: 'Tarih Silmeyi Onayla',
+      message: 'Bu tarih aralığını başvuru formundan kaldırmak istiyor musun?'
+    }).subscribe((isConfirmed) => {
+      if (isConfirmed) {
+        let theForm = { _id: _id, starteddate: null, endeddate: null };
+        this.departmentService.saveDepartmentDate(1, theForm).subscribe(date => {
+          if (date.success === false) {
+            this.toastr.error(date.message);
+          } else {
+            this.toastr.success(date.message);
+            this.fetchReport();
+          }
+        })
       }
-    })
+    });
+    setTimeout(() => {
+      disposable.unsubscribe();
+    }, 15000);
   }
-} 
+}

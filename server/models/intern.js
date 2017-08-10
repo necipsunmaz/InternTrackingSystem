@@ -7,6 +7,7 @@ const InternSchema = new Schema({
     lastname: { type: String },
     gender: { type: Boolean },
     email: { type: String },
+    department: Schema.Types.ObjectId,
     photo: { type: String },
     tc: { type: String },
     dob: { type: Date },

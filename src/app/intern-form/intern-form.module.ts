@@ -9,20 +9,27 @@ import { TextMaskModule } from 'angular2-text-mask';
 
 
 import { InternFormComponent } from './intern-form.component';
+import { BootstrapModalModule } from 'ng2-bootstrap-modal';
+import {PromptComponent } from './prompt.component';
 //import { ForgotComponent } from './forgot/forgot.component';
 import { AuthGuard } from '../user/auth-guard.service';
 import { AuthService } from '../user/auth.service';
 import { DepartmentsService } from '../departments/departments.service';
 import { FormWizardModule } from 'angular2-wizard';
+import { ImageCropperComponent, CropperSettings, Bounds } from 'ng2-img-cropper';
+
 
 
 @NgModule({
   declarations: [
-    InternFormComponent
+    InternFormComponent,
+    ImageCropperComponent,
+    PromptComponent
     //ForgotComponent,
   ],
   imports: [
     CommonModule,
+    BootstrapModalModule,
     FormsModule,
     NgbModule,
     TextMaskModule,
@@ -41,6 +48,6 @@ import { FormWizardModule } from 'angular2-wizard';
     AuthGuard,
     DepartmentsService
   ],
-  bootstrap: [InternFormComponent]
+  bootstrap: [InternFormComponent, PromptComponent]
 })
 export class InternFormModule { }

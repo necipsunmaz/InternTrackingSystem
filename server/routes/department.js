@@ -241,19 +241,49 @@ exports.getAllAdminUser = function (req, res, next) {
 }
 
 exports.getAllDepartments = function (req, res, next) {
-    Department.find(function (err, department) {
-      if (err) {
-        res.status(400).json({
-          success: false,
-          message: 'İşlem hataya uğradı! Hata: ' + err
-        });
-      }
-
-      res.status(200).json({
-        success: true,
-        data: department
+  Department.find(function (err, department) {
+    if (err) {
+      res.status(400).json({
+        success: false,
+        message: 'İşlem hataya uğradı! Hata: ' + err
       });
+    }
+
+    res.status(200).json({
+      success: true,
+      data: department
     });
+  });
+}
+
+exports.getDepartmentsForForm = function (req, res, next) {
+  Department.find('', '_id name dates', function (err, department) {
+    if (err) {
+      res.status(400).json({
+        success: false,
+        message: 'İşlem hataya uğradı! Hata: ' + err
+      });
+    }
+
+    arr = [];
+    department.forEach(function (element) {
+      if (element.dates[0] !== undefined) {
+        element.dates = element.dates.filter(x => x.isEnabled),
+          function (err, next) {
+            if (err) next();
+          };
+        if (element.dates[0] !== undefined) {
+          arr.push(element);
+        }
+      }
+    }, this);
+
+
+    res.status(200).json({
+      success: true,
+      data: arr
+    });
+  });
 }
 
 exports.deleteDepartment = function (req, res, next) {
@@ -315,7 +345,6 @@ exports.deleteDepartment = function (req, res, next) {
 
 /////////////////// Only for admin /////////////////////////
 
-
 exports.saveDapartmentDate = function (req, res, next) {
   if (req.decoded._doc.role === 1) {
     const _id = req.params.id;
@@ -341,7 +370,7 @@ exports.saveDapartmentDate = function (req, res, next) {
             }
             dateArray.push(element);
           } else if (_id == 1 && element._id == req.body._id) {
-            console.log('delete this date: '+ req.body._id);
+            console.log('delete this date: ' + req.body._id);
           } else {
             dateArray.push(element);
           }

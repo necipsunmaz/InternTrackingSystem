@@ -46,40 +46,41 @@ export class DatePickerService extends NgbDatepickerI18n {
     }
 
     d: any;
-  d2: any;
-  d3: any;
-  model: NgbDateStruct;
-  popupModel;
-  date: { year: number, month: number };
-  displayMonths = 2;
-  navigation = 'select';
-  disabledModel: NgbDateStruct = { year: now.getFullYear(), month: now.getMonth() + 1, day: now.getDate() };
-  disabled = true;
-  intModel;
-  customModel: NgbDateStruct;
+    d2: any;
+    d3: any;
+    model: NgbDateStruct;
+    popupModel;
+    date: { year: number, month: number };
+    displayMonths = 2;
+    navigation = 'select';
+    disabledModel: NgbDateStruct = { year: now.getFullYear(), month: now.getMonth() + 1, day: now.getDate() };
+    disabled = true;
+    minDate = { year: 1940, month: 1, day: 1 };
+    intModel;
+    customModel: NgbDateStruct;
 
-  set language(language: string) {
-    this._i18n.language = language;
-  }
+    set language(language: string) {
+        this._i18n.language = language;
+    }
 
-  get language() {
-    return this._i18n.language;
-  }
+    get language() {
+        return this._i18n.language;
+    }
 
-  selectToday() {
-    this.model = { year: now.getFullYear(), month: now.getMonth() + 1, day: now.getDate() };
-  }
+    selectToday() {
+        this.model = { year: now.getFullYear(), month: now.getMonth() + 1, day: now.getDate() };
+    }
 
-  isWeekend(date: NgbDateStruct) {
-    const d = new Date(date.year, date.month - 1, date.day);
-    return d.getDay() === 0 || d.getDay() === 6;
-  }
+    isWeekend(date: NgbDateStruct) {
+        const d = new Date(date.year, date.month - 1, date.day);
+        return d.getDay() === 0 || d.getDay() === 6;
+    }
 
-  isDisabled(date: NgbDateStruct, current: { month: number }) {
-    return date.month !== current.month;
-  }
+    isDisabled(date: NgbDateStruct, current: { month: number }) {
+        return date.month !== current.month;
+    }
 
-  ngOnInit() {
-    this.selectToday();
-  }
+    ngOnInit() {
+        this.selectToday();
+    }
 }

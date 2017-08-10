@@ -52,6 +52,8 @@ app.post('/intern', intern.saveintern); // adds & update expense of the user
 
 app.get('/departments', department.getAllDepartments); // Get all department
 
+app.get('/departments-form', department.getDepartmentsForForm); // Get all department
+
 // express router
 var apiRoutes = express.Router();
 

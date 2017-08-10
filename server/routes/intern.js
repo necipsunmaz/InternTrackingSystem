@@ -9,6 +9,7 @@ exports.saveintern = function (req, res, next) {
     const lastname = req.body.lastname;
     const gender = req.body.gender;
     const email = req.body.email;
+    const department = req.body.department;
     const tc = req.body.tc;
     const dob = req.body.dob;
     const starteddate = req.body.starteddate;
@@ -18,7 +19,7 @@ exports.saveintern = function (req, res, next) {
     const photo = req.body.photo;
     const _id = req.body._id;
 
-    if (!tc || !firstname || !lastname || !email || !starteddate || !endeddate || !phone || !address || gender == null || !dob || !photo) {
+    if (!tc || !firstname || !lastname || !email || !starteddate || !endeddate || !phone || !address || gender == null || !department || !dob || !photo) {
         return res.status(422).send({ success: false, message: 'Veriler geçerli değil veya doğrulanmadı.' });
     }
         if (_id) {
@@ -31,6 +32,7 @@ exports.saveintern = function (req, res, next) {
                     intern.lastname = lastname;
                     intern.gender = gender;
                     intern.email = email;
+                    intern.department = department;
                     intern.tc = tc;
                     intern.dob = dob;
                     intern.starteddate = starteddate;
@@ -55,6 +57,7 @@ exports.saveintern = function (req, res, next) {
                 lastname: lastname,
                 gender: gender,
                 email: email,
+                department: department,
                 tc: tc,
                 dob: dob,
                 starteddate: starteddate,

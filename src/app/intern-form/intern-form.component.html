@@ -4,7 +4,7 @@
     <div class="card">
       <div class="card-header">Stajyer Başvuru Formu</div>
       <form-wizard (onStepChanged)="onStepChanged($event)">
-        <wizard-step [title]="'Kişisel'" [icon]="'user'" [isValid]="internFormStep1.valid" (onNext)="onStep1Next($event)">
+        <wizard-step [title]="'Kişisel'" [icon]="'user'" [isValid]="internFormStep1.invalid" (onNext)="onStep1Next($event)">
           <form [formGroup]="internFormStep1">
 
             <div class="row">
@@ -41,7 +41,8 @@
                 <label for="phone" class="form-control-label">
           Telefon
         </label>
-                <input type="text" class="form-control" placeholder="+90 (555) 555-5555" [textMask]="{mask: mask}" [(ngModel)]="myModel"  [formControl]="internFormStep1.get('phone')" [ngClass]="{'form-control-danger': internFormStep1.get('phone').hasError('required') && internFormStep1.get('phone').touched}"
+                <input type="text" class="form-control" placeholder="+90 (555) 555-5555" [textMask]="{mask: mask}" [(ngModel)]="myModel"
+                  [formControl]="internFormStep1.get('phone')" [ngClass]="{'form-control-danger': internFormStep1.get('phone').hasError('required') && internFormStep1.get('phone').touched}"
                 />
                 <div class="form-control-feedback" *ngIf="internFormStep1.get('phone').hasError('required') && internFormStep1.get('phone').touched">Telefon gerekli</div>
               </fieldset>
@@ -93,12 +94,14 @@
         </label>
 
                 <div class="input-group">
-                  <input [(ngModel)]="dobValue"  class="form-control" placeholder="yyyy-mm-dd" [formControl]="internFormStep1.get('dob')" [ngClass]="{'form-control-danger': internFormStep1.get('dob').hasError('required') && internFormStep1.get('dob').touched}" name="dp" [displayMonths]=1 [navigation]="navigation" ngbDatepicker #d3="ngbDatepicker" />
+                  <input [(ngModel)]="dobValue" class="form-control" placeholder="yyyy-mm-dd" [formControl]="internFormStep1.get('dob')" [ngClass]="{'form-control-danger': internFormStep1.get('dob').hasError('required') && internFormStep1.get('dob').touched}"
+                    name="dp" [minDate]="datePickerService.minDate" [displayMonths]=1 [navigation]="navigation" ngbDatepicker
+                    #d3="ngbDatepicker" />
                   <div class="input-group-addon" (click)="d3.toggle()">
                     <i class="icon icon-basic-calendar" style="cursor: pointer;"></i>
                   </div>
                 </div>
-                <div class="form-control-feedback" *ngIf="internFormStep1.get('dob').hasError('required') && internFormStep1.get('dob').touched">Bu alan gerekli</div>             
+                <div class="form-control-feedback" *ngIf="internFormStep1.get('dob').hasError('required') && internFormStep1.get('dob').touched">Bu alan gerekli</div>
               </fieldset>
             </div>
 
@@ -109,15 +112,15 @@
         </label><br>
 
                 <label class="btn btn-secondary" for="filePicker">
-            <input type="file" id="filePicker" style="display:none;"  (change)="handleFileSelect($event)" accept="image/jpeg, image/png, image/bmp" class="custom-file-input"/>
+            <input type="file" id="filePicker" style="display:none;"  (change)="showCropper($event)" accept="image/jpeg, image/png, image/bmp" class="custom-file-input"/>
               Yükle
         </label>
                 <input type="checkbox" style="display:none;" [formControl]="internFormStep1.get('photo')" [ngClass]="{'form-control-danger': internFormStep1.get('photo').hasError('required')}"
                 />
                 <div class="form-control-feedback" *ngIf="internFormStep1.get('photo').hasError('required')">Fotoğraf gerekli</div>
               </fieldset>
-              <div class="form-group col-6 pull-left avatar-lg">
-                <div *ngIf="base64textString"><img class="img-fluid" [src]="base64textString" /></div>
+              <div class="form-group col-6 avatar-lg">
+                <div *ngIf="base64textString"><img class="pull-right img-fluid" [src]="base64textString" /></div>
               </div>
             </div>
           </form>
@@ -131,10 +134,10 @@
               <label for="department" class="form-control-label">
           Departman
         </label>
-              <select type="text" #selectDepartment class="form-control" [(ngModel)]="SelectedValue" (change)='toDefaultTime(selectDepartment.value)'
+              <select type="text" #selectDepartment class="form-control" [(ngModel)]="selectedDepartment" (change)='toDefaultTime(selectDepartment.value)'
                 [formControl]="internFormStep2.get('department')">
-                <option value="" disabled="true" [selected]="!date">-- Departman --</option>
-                <option *ngFor="let dep of departments" [ngValue]="dep.starteddate">{{dep.name}}</option>
+                <option [ngValue]="null" disabled="true" [selected]="!selectedDepartment">-- Departman --</option>
+                <option *ngFor="let dep of departments" [ngValue]="dep._id">{{dep.name}}</option>
               </select>
               <div class="form-control-feedback" *ngIf="internFormStep2.get('department').hasError('required') && internFormStep2.get('department').touched">Bu alan gerekli</div>
             </fieldset>
@@ -157,7 +160,8 @@
           </form>
         </wizard-step>
 
-        <wizard-step [title]="'Onay'" [icon]="'check'" [isValid]="internFormStep3.valid && internFormStep2.valid && internFormStep1.valid" (onComplete)="onComplete($event)">
+        <wizard-step [title]="'Onay'" [icon]="'check'" [isValid]="internFormStep3.valid && internFormStep2.valid && internFormStep1.valid"
+          (onComplete)="onComplete($event)">
           <h1>Tebrikler.</h1>
           <p class="lead">Tüm bilgileri başarı ile ve eksiksiz olarak girdiniz. <br>Son bir aşama olarak bu bilgilerin size ait olduğunu
             onaylamanız gerekmektedir.
