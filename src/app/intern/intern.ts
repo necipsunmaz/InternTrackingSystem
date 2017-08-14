@@ -10,9 +10,5 @@ export interface IIntern {
     phone: string,
     address: string,
     verified: Boolean,
-    days: [{
-        date: Date,
-        am: Boolean,
-        pm: Boolean
-    }]
+    photo:string
 }

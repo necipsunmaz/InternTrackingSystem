@@ -71,6 +71,7 @@ export class InternFormComponent implements OnInit {
 
 
   //Department Validation
+  selectedDepartment: string = null;
   departments: Departments[];
 
   getDapartments() {
@@ -79,30 +80,27 @@ export class InternFormComponent implements OnInit {
       if (data.success === false) {
         this.toastr.error(data.message);
       } else {
-        if(data.data[0] !== undefined){
+        if (data.data[0] !== undefined) {
           this.departments = data.data;
-        }else{
+        } else {
           this.departments = [];
           this.selectedDepartment = null;
           this.toDefaultTime(this.selectedDepartment);
           this.toastr.info('Departman kayıtları henüz başlamamıştır. Lütfen sonra tekrar deneyiniz.');
         }
-        
       }
     });
     // }
     // this.toastr.error('İlk aşamadaki gerekli tüm bilgileri doldurun!');
   }
 
-  selectedDepartment: string  = null;
-
   toDefaultTime(selected) {
     let copy = this.getCopyOfOptions();
     if (this.departments !== undefined && this.departments.length > 0) {
       let arr = [];
       this.departments.find(x => x._id == this.selectedDepartment).dates.forEach(element => {
-          arr.push(element.starteddate);
-          arr.push(element.endeddate);
+        arr.push(element.starteddate);
+        arr.push(element.endeddate);
       });
       let b = new Date(arr.sort().shift());
       let e = new Date(arr.sort().pop());
@@ -111,13 +109,13 @@ export class InternFormComponent implements OnInit {
 
       copy.disableUntil = selected ? {
         year: b.getFullYear(),
-        month: b.getMonth()+1,
+        month: b.getMonth() + 1,
         day: b.getDate()
       } : { year: 0, month: 0, day: 0 };
 
       copy.disableSince = selected ? {
         year: e.getFullYear(),
-        month: e.getMonth()+1,
+        month: e.getMonth() + 1,
         day: e.getDate()
       } : { year: 0, month: 0, day: 0 };
       this.myDateRangePickerOptionsInline = copy;
@@ -158,7 +156,7 @@ export class InternFormComponent implements OnInit {
       this.myDateRangePickerOptionsInline = copy;
     } else {
       copy.disableUntil = selected ? { year: 0, month: 0, day: 0 } : { year: 2017, month: 8, day: 10 };
-      copy.disableSince = selected ? { year: 0, month: 0,  day: 0 } : { year: 2017, month: 8, day: 10 };
+      copy.disableSince = selected ? { year: 0, month: 0, day: 0 } : { year: 2017, month: 8, day: 10 };
       this.myDateRangePickerOptionsInline = copy;
     }
   }
@@ -173,19 +171,19 @@ export class InternFormComponent implements OnInit {
     monthLabels: { 1: "Ocak", 2: "Şubat", 3: "Mart", 4: "Nisan", 5: "Mayıs", 6: "Haziran", 7: "Temmuz", 8: "Ağustos", 9: "Eylül", 10: "Ekim", 11: "Kasım", 12: "Aralık" },
     sunHighlight: true,
     inline: true,
-    selectorHeight: '530px',
-    height: '530px',
+    selectorHeight: '520px',
+    height: '520px',
     width: '100%',
     selectorWidth: '100%',
     showSelectDateText: true
   };
 
-  sdate: Date;
-  edate: Date;
+  sdate: NgbDateStruct;
+  edate: NgbDateStruct;
 
   onDateRangeChanged(event: IMyDateRangeModel) {
-    this.sdate = event.beginJsDate;
-    this.edate = event.endJsDate
+    this.sdate =  event.beginDate;
+    this.edate = event.endDate;
   }
 
   getCopyOfOptions(): IMyDrpOptions {
@@ -206,6 +204,7 @@ export class InternFormComponent implements OnInit {
   address = new FormControl('', [Validators.required]);
   photo = new FormControl('', [Validators.requiredTrue]);
   department = new FormControl('', [Validators.required]);
+  teacher = new FormControl('', [Validators.required]);
   isComplete = new FormControl('', [Validators.requiredTrue]);
   dateRange = new FormControl('', [Validators.required]);
 
@@ -218,7 +217,8 @@ export class InternFormComponent implements OnInit {
     tc: this.tc,
     phone: this.phone,
     address: this.address,
-    photo: this.photo
+    photo: this.photo,
+    teacher: this.teacher
   });
 
   internFormStep2: FormGroup = this.fb.group({
@@ -241,9 +241,8 @@ export class InternFormComponent implements OnInit {
       theForm.gender = this.genderValue;
       theForm.department = this.selectedDepartment;
       theForm.dob = this.ngbDateParserFormatter.format(this.dobValue);
-      theForm.starteddate = this.internFormStep2.value.starteddate;
-      theForm.endeddate = this.internFormStep2.value.endeddate;
-
+      theForm.starteddate = this.ngbDateParserFormatter.format(this.sdate);
+      theForm.endeddate = this.ngbDateParserFormatter.format(this.edate);
 
       this.departmentsService.saveIntern(theForm)
         .subscribe(data => {

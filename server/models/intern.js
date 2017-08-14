@@ -15,12 +15,10 @@ const InternSchema = new Schema({
     endeddate: { type: Date },
     phone: { type: String },
     address: { type: String },
-    verified: { type: Boolean, default: false },
-    days: [{
-        date: Date,
-        am: Boolean,
-        pm: Boolean
-    }]
+    academician: Schema.Types.ObjectId,
+    teacher: {type: String},
+    isComplete:{type: Boolean, default: null},
+    verified: { type: Boolean, default: false }
 });
 
 module.exports = mongoose.model('interns', InternSchema, 'interns');

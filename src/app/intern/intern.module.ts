@@ -27,7 +27,6 @@ import { ProfileComponent } from './profile/profile.component';
     ReactiveFormsModule,
     NgxDatatableModule,
     NgxChartsModule,
-    NgbModule,
     CalendarModule.forRoot(),
     NgbProgressbarModule,
     RouterModule.forChild(InternRoutes)

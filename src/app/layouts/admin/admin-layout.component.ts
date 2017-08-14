@@ -2,6 +2,8 @@ import { Component, OnInit, OnDestroy, ViewChild, HostListener, AnimationTransit
 import { Title } from '@angular/platform-browser';
 import { Router, ActivatedRoute, NavigationEnd } from '@angular/router';
 import { NgbModal, ModalDismissReasons } from '@ng-bootstrap/ng-bootstrap';
+
+import { DepartmentsService } from '../../departments/departments.service';
 import { AuthService } from "../../user/auth.service";
 import { ToastrService } from '../../common/toastr.service'
 //import { MenuItems } from '../../shared/menu-items/menu-items';
@@ -41,11 +43,13 @@ var MENUITEMS = [];
 @Component({
   selector: 'app-layout',
   templateUrl: './admin-layout.component.html',
-  styleUrls: ['./admin-layout.component.scss']
+  styleUrls: ['./admin-layout.component.scss'],
+  providers:[DepartmentsService]
 })
 export class AdminLayoutComponent implements OnInit, OnDestroy {
 
   private _router: Subscription;
+  MenuHead : string;
 
   currentLang = 'en';
   options: Options;
@@ -66,6 +70,7 @@ export class AdminLayoutComponent implements OnInit, OnDestroy {
     private toastr: ToastrService,
     private router: Router,
     private route: ActivatedRoute,
+    private departmentsService: DepartmentsService,
     public translate: TranslateService,
     private modalService: NgbModal,
     private titleService: Title) {
@@ -73,10 +78,11 @@ export class AdminLayoutComponent implements OnInit, OnDestroy {
     translate.use(browserLang.match(/en|fr/) ? browserLang : 'en');
   }
 
-  ngOnInit(): void {
+  ngOnInit(){
     let role = JSON.parse(localStorage.getItem('currentUser')).user.role;
     if (role != null) {
       if (role === 0) {
+        this.MenuHead = 'Süper Admin'
         MENUITEMS = [];
         MENUITEMS.push(
           {
@@ -84,26 +90,6 @@ export class AdminLayoutComponent implements OnInit, OnDestroy {
             name: 'GİRİŞ',
             type: 'link',
             icon: 'basic-home'
-          }, {
-            state: 'appeals',
-            name: 'BAŞVURULAR',
-            type: 'link',
-            icon: 'basic-paperplane'
-          }, {
-            state: 'intern',
-            name: 'STAJYER',
-            type: 'sub',
-            icon: 'basic-postcard',
-            children: [{
-              state: 'tracking',
-              name: 'Devam/Devamsızlık'
-            }, {
-              state: 'profile',
-              name: 'PROFİL'
-            }, {
-              state: 'calendar',
-              name: 'Devam/Devamsızlık Takvimi'
-            }]
           }, {
             state: 'admins',
             name: 'Yöneticiler',
@@ -121,6 +107,14 @@ export class AdminLayoutComponent implements OnInit, OnDestroy {
             icon: 'ecommerce-graph1'
           });
       } else if (role === 1) {
+        this.departmentsService.getDepartmentName(JSON.parse(localStorage.getItem('currentUser')).user.department).subscribe(department => {
+          if(department.success === false){
+            this.toastr.error(department.message);
+          } else {
+            this.MenuHead = department.data;
+            console.log(this.MenuHead);
+          }
+        })
         MENUITEMS = [];
         MENUITEMS.push(
           {
@@ -131,10 +125,17 @@ export class AdminLayoutComponent implements OnInit, OnDestroy {
           }, {
             state: 'appeals',
             name: 'BAŞVURULAR',
-            type: 'link',
-            icon: 'basic-paperplane'
+            type: 'sub',
+            icon: 'basic-paperplane',
+            children: [{
+              state: 'intern',
+              name: 'Stajyer Başvuruları'
+            }, {
+              state: 'academician',
+              name: 'Akademisyen Başvuruları'
+            }]
           }, {
-            state: 'intern',
+            state: 'interns',
             name: 'STAJYER',
             type: 'sub',
             icon: 'basic-postcard',
@@ -160,6 +161,7 @@ export class AdminLayoutComponent implements OnInit, OnDestroy {
             icon: 'ecommerce-graph1'
           });
       } else if (role === 2) {
+        this.MenuHead = 'Akademisyen'
         MENUITEMS = [];
         MENUITEMS.push({
           state: 'dashboard',

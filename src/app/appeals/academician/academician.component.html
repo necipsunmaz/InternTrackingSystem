@@ -1,0 +1,41 @@
+<div class="card">
+  <div class="card-header">{{model.options}} Akademisyen Başvuruları</div>
+  <div class="card-block">
+    <p>Şu anda {{model.options}} tüm akademisyen başvurularını görmektesiniz.</p>
+  </div>
+  <div class="btn-group">
+    <button class="btn" [class.btn-primary]="model.options === item" [class.btn-secondary]="model.options !== item" *ngFor="let item of radioItems"
+      type="button" id="{{item}}" name="options" (click)="model.options=item;ngOnInit();">{{item}}</button>
+  </div>
+
+  <div class="table-responsive">
+    <table class="table align-middle mb-0">
+      <thead>
+        <tr>
+          <th>Akademisyen</th>
+          <th>Stajyer</th>
+          <th>Akademisyen onay</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let academ of academicians;let rowIndex = index">
+          <td>
+            <a href="#" (click)="$event.preventDefault();showAcademician(academ._id);" class="d-block text-capitalize">{{academ.firstname}} {{academ.lastname}}</a> 
+          </td>
+          <td>
+            <a  *ngFor="let int of academ.intern" href="#" (click)="$event.preventDefault();showIntern(int._id);" style="margin-right:5px;" 
+            class="badge badge-default text-uppercase">{{int.firstname}} {{int.lastname}}</a>
+          </td>
+         <td>
+            <button type="button" *ngIf="checkVerify(model.options) == false" class="btn btn-primary" aria-label="View" (click)="verifyAcademician(true,academ._id,rowIndex)">
+                                    <span class="glyphicon glyphicon-eye-open" aria-hidden="true">Onayla</span>
+                                </button>
+            <button type="button" *ngIf="checkVerify(model.options) == false" class="btn btn-danger" aria-label="View" (click)="verifyAcademician(false,academ._id,rowIndex);">
+                                    <span class="glyphicon glyphicon-eye-open" aria-hidden="true">Kaldır</span>
+                                </button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>

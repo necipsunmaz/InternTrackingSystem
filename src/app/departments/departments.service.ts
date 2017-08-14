@@ -76,10 +76,17 @@ export class DepartmentsService {
             .catch(this.handleError);
     }
 
-    private handleError(error: Response) {
-        console.error(error);
-        return Observable.throw(error.json().error || 'Server error');
+    getDepartmentName(id) {
+        let headers = new Headers();
+        headers.append('Content-Type', 'application/json');
+        headers.append('Authorization', `${this.jwtToken}`);
+        let options = new RequestOptions({ headers: headers });
+
+        return this.http.get(`http://localhost:3000/api/department/name/${id}`, options)
+            .map((response: Response) => response.json())
+            .catch(this.handleError);
     }
+
 
     // Only for Intern Form
 
@@ -108,5 +115,10 @@ export class DepartmentsService {
         return this.http.get(`http://localhost:3000/departments-form`, options)
             .map((response: Response) => response.json())
             .catch(this.handleError);
+    }
+
+    private handleError(error: Response) {
+        console.error(error);
+        return Observable.throw(error.json().error || 'Server error');
     }
 }

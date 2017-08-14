@@ -42,8 +42,8 @@ export class DatesComponent implements OnInit {
     inline: true,
     minYear: this.toDay.getFullYear() - 2,
     maxYear: this.toDay.getFullYear() + 2,
-    selectorHeight: '530px',
-    height: '530px',
+    selectorHeight: '520px',
+    height: '520px',
     width: '100%',
     selectorWidth: '100%',
     showSelectDateText: true

@@ -9,7 +9,6 @@ const UserSchema = new Schema({
     photo: {data:Buffer, contentType:String},
     username: {type:String},
     password: {type:String},
-    dob: {type:Date},
     phone: {type:String},
     department: Schema.Types.ObjectId,
     isEnabled: {type: Boolean, default: false},

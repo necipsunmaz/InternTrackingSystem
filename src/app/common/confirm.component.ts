@@ -17,7 +17,7 @@ export interface ConfirmModel {
                    </div>
                    <div class="modal-footer">
                      <button type="button" class="btn btn-primary" (click)="confirm()">Tamam</button>
-                     <button type="button" class="btn btn-default" (click)="close()">İptal</button>
+                     <button type="button" class="btn btn-secondary" (click)="close()">İptal</button>
                    </div>
                  </div>
                 </div>`

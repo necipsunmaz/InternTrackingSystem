@@ -1,5 +1,6 @@
 var mongoose = require('mongoose');
 var User = require('../models/user');
+var Intern = require('../models/intern');
 var jwt = require('jsonwebtoken');
 var config = require('../config');
 var MongoDB = require('mongodb');
@@ -13,12 +14,11 @@ exports.signup = function (req, res, next) {
   const img = req.body.img;
   const username = req.body.username;
   const password = req.body.password;
-  const dob = req.body.dob;
   const phone = req.body.phone;
   const department = req.body.department;
   const role = 2;
 
-  if (!firstname || !lastname || !email || !username || !password || !dob || !phone || !department) {
+  if (!firstname || !lastname || !email || !username || !password || !phone || !department) {
     return res.status(422).json({
       success: false,
       message: 'Gönderilen bilgiler kabul edilemez.'
@@ -51,9 +51,7 @@ exports.signup = function (req, res, next) {
         password: password,
         phone: phone,
         department: department,
-        dob: dob,
-        role: role,
-        img: img
+        role: role
       });
 
       oUser.save(function (err, oUser) {
@@ -66,7 +64,8 @@ exports.signup = function (req, res, next) {
 
         res.status(201).json({
           success: true,
-          message: 'Kaydınız tamamlandı sistem tarafından onaylandıktan sonra giriş yapabilirisiniz.'
+          message: 'Kaydınız tamamlandı sistem tarafından onaylandıktan sonra giriş yapabilirisiniz.',
+          data: oUser._id
         });
       });
     });
@@ -119,7 +118,6 @@ exports.login = function (req, res, next) {
                 'firstname': user.firstname,
                 'lastname': user.lastname,
                 'email': user.email,
-                'img': user.photo,
                 'lastlogin': last_login,
                 'department': user.department,
                 'role': user.role
@@ -258,46 +256,6 @@ exports.getuserDetails = function (req, res, next) {
       message: 'Hatalı girdi!'
     });
   }
-
-  /*
-    if (opt === "Admin" && auth === "Admin") {
-      User.find(function (err, user) {
-        if (err) {
-          res.status(400).json({
-            success: false,
-            message: 'İşlem hataya uğradı! Hata: ' + err
-          });
-          res.status(201).json({
-            success: true,
-            data: user
-          });
-        }
-      });
-    } else {
-      res.status(201).json({
-        success: true,
-        data: auth + opt + ' hi'
-      });
-    }
-
-    /*
-
-    if (opt == "Acedemician")
-
-      if (opt == "")
-
-        User.find(function (err, user) {
-          if (err) {
-            res.status(400).json({
-              success: false,
-              message: 'İşlem hataya uğradı! Hata: ' + err
-            });
-          }
-          res.status(201).json({
-            success: true,
-            data: user
-          });
-        });*/
 }
 
 exports.registerAdmin = function (req, res, next) {
@@ -345,7 +303,6 @@ exports.registerAdmin = function (req, res, next) {
           password: password,
           phone: phone,
           department: null,
-          dob: null,
           role: role,
           photo: photo
         });
@@ -524,4 +481,218 @@ exports.deleteUser = function (req, res, next) {
       message: 'Yetkisiz erişim!'
     });
   }
+}
+
+
+exports.academicianVerify = function (req, res, next) {
+  const status = req.params.status;
+  const _id = req.body.academician_id;
+  const role = req.decoded._doc.role;
+  if (role == 1) {
+    if (!_id) {
+      return res.status(422).json({
+        success: false,
+        message: 'Gönderilen bilgiler kabul edilmez.'
+      });
+    } else if (status == true) {
+      User.findById(_id).exec(function (err, academician) {
+        if (err) {
+          res.status(400).json({
+            success: false,
+            message: 'İşlem hataya uğradı! Hata: ' + err
+          });
+        }
+
+        academician.isEnabled = true;
+        academician.save(function (err) {
+          if (err) {
+            res.status(400).json({
+              success: false,
+              message: 'İşlem hataya uğradı! Hata: ' + err
+            });
+          }
+          res.status(201).json({
+            success: true,
+            message: 'İşlem başarıyla gerçekleştirildi.'
+          });
+        });
+      });
+    } else {
+
+      User.remove({
+        _id: _id
+      }, function (err) {
+        if (err) {
+          res.status(400).json({
+            success: false,
+            message: 'İşlem hataya uğradı! Hata: ' + err
+          });
+        }
+
+        Intern.find({
+          academician: _id
+        }).exec(function (err, intern) {
+          if (intern) {
+            intern.forEach(function (element) {
+              element.academician = null;
+              element.save(function (err) {
+                if (err) {
+                  res.status(400).json({
+                    success: false,
+                    message: 'İşlem hataya uğradı! Hata: ' + err
+                  });
+                }
+              });
+            }, this);
+
+            res.status(201).json({
+              success: true,
+              message: 'Akademisyen başvuru formu başarıyla silindi.'
+            });
+          }
+        });
+
+      });
+    }
+  } else {
+    res.status(401).json({
+      success: false,
+      message: 'Yetkisiz giriş.'
+    });
+  }
+}
+
+exports.academicianInterns = function (req, res, next) {
+  const userid = req.params.id;
+  var a = req.body.intern_ids;
+  var c = [];
+
+  if (role == 2) {
+    if (!academicianid || !internid) {
+      return res.status(422).json({
+        success: false,
+        message: 'Gönderilen bilgiler kabul edilmez.'
+      });
+    } else {
+      if (!userid || !a) {
+        return res.status(422).json({
+          success: false,
+          message: 'Gönderilen bilgiler kabul edilmez.'
+        });
+      } else {
+        a.split(',').forEach(function (e) {
+          c.push({
+            intern_id: e,
+            state: null
+          });
+        });
+        User.findOne({
+          _id: userid
+        }, function (err, user) {
+          if (err) {
+            res.status(400).json({
+              success: false,
+              message: 'İşlem hataya uğradı! Hata: ' + err
+            });
+          }
+          if (user) {
+            var inbox;
+            var incomingbox = [];
+            var department;
+            user.intern_ids.forEach(function (e) {
+              c.push(e);
+              Intern.findById(e, 'department', function (err, internn) {
+                if (err) {
+                  res.status(400).json({
+                    success: false,
+                    message: 'İşlem hataya uğradı! Hata: ' + err
+                  });
+                }
+                department = internn.department;
+              });
+              User.findOne({
+                department: department
+              }, 'Inbox', function (err, adminn) {
+                if (err) {
+                  res.status(400).json({
+                    success: false,
+                    message: 'İşlem hataya uğradı! Hata: ' + err
+                  });
+                }
+                incomingbox = adminn.Inbox;
+                incomingbox.push({
+                  academician: academicianid,
+                  intern: internid,
+                  state: null
+                });
+                adminn.Inbox = incomingbox;
+                adminn.save(function (err) {
+                  if (err) {
+                    res.status(400).json({
+                      success: false,
+                      message: 'İşlem hataya uğradı! Hata: ' + err
+                    });
+                  }
+                });
+              });
+            });
+            user.intern_ids = c;
+            user.save(function (err) {
+              if (err) {
+                res.status(400).json({
+                  success: false,
+                  message: 'İşlem hataya uğradı! Hata: ' + err
+                });
+              }
+
+              res.status(201).json({
+                success: true,
+                message: 'Öğrenciler başarıyla eklendi.'
+              });
+            });
+          }
+        });
+      }
+    }
+  }
+}
+
+
+exports.getAcademicianByAdmin = function (req, res, next) {
+  const isEnbaled = req.params.status;
+  const department = req.decoded._doc.department;
+  User.find({
+    role: 2,
+    isEnabled: isEnbaled,
+    department: department
+  }, '_id firstname lastname').exec(function (err, academician) {
+    if (err) {
+      res.status(400).json({
+        success: false,
+        message: ' Bir hata oluştu ' + err
+      });
+    }
+
+    res.status(201).json({
+      success: true,
+      data: academician
+    });
+  });
+}
+
+exports.getAcademician = function (req, res, next) {
+  const academician_id = req.params.id;
+  User.findById(academician_id).exec(function (err, academician) {
+    if (err) {
+      res.status(400).json({
+        success: false,
+        message: ' Bir hata oluştu ' + err
+      });
+    }
+
+    res.status(201).json({
+      success: true,
+      data: academician
+    });
+  });
 }

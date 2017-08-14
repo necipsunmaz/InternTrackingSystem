@@ -5,6 +5,7 @@ import { RouterModule } from '@angular/router';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { DatePickerService, I18n } from '../common/datePicker.service';
 import { TextMaskModule } from 'angular2-text-mask';
+import { Ng2CompleterModule } from "ng2-completer";
 
 import { SigninComponent } from './signin/signin.component';
 import { SignupComponent } from './signup/signup.component';
@@ -20,6 +21,7 @@ import { UserService } from './user.service';
     NgbModule,
     TextMaskModule,
     ReactiveFormsModule,
+    Ng2CompleterModule,
     RouterModule.forChild([
       { path: 'signin', component: SigninComponent },
       { path: 'signup', component: SignupComponent },

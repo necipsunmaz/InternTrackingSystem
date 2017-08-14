@@ -37,42 +37,52 @@
           <div class="form-control-feedback" *ngIf="registerForm.get('email').hasError('email') && registerForm.get('email').touched">Lütfen bir eposta girin</div>
         </fieldset>
 
-        <fieldset class="form-group col-6 pull-right" [ngClass]="{'has-danger': registerForm.get('dob').hasError('required') && registerForm.get('dob').touched}">
-          <label for="dob" class="form-control-label">
-          Doğum Tarihi
-        </label>
-
-          <div class="input-group">
-            <input [(ngModel)]="dobValue" class="form-control" placeholder="yyyy-mm-dd" [formControl]="registerForm.get('dob')" [ngClass]="{'form-control-danger': registerForm.get('dob').hasError('required') && registerForm.get('dob').touched}"
-              name="dp" [displayMonths]=1 [navigation]="navigation" ngbDatepicker #d3="ngbDatepicker" />
-            <div class="input-group-addon" (click)="d3.toggle()">
-              <i class="icon icon-basic-calendar" style="cursor: pointer;"></i>
-            </div>
-          </div>
-          <div class="form-control-feedback" *ngIf="registerForm.get('dob').hasError('required') && registerForm.get('dob').touched">Bu alan gerekli</div>
-        </fieldset>
-      </div>
-      <div class="row">
-      <fieldset class="form-group col-6 pull-left" [ngClass]="{'has-danger': registerForm.get('department').hasError('required') && registerForm.get('department').touched}">
-        <label for="department" class="form-control-label">
-          Departman
-        </label>
-        <select type="text" class="form-control" [(ngModel)]="departmentValue" [formControl]="registerForm.get('department')">
-                <option value="" disabled="true" [selected]="!departmentValue">-- Departman --</option>
-                <option *ngFor="let dep of departmentObj" [ngValue]="dep.name">{{dep.name}}</option>
-              </select>
-        <div class="form-control-feedback" *ngIf="registerForm.get('department').hasError('required') && registerForm.get('department').touched">Bu alan gerekli</div>
-      </fieldset>
-
-      <fieldset class="form-group col-6 pull-right" [ngClass]="{'has-danger': registerForm.get('phone').hasError('required') && registerForm.get('phone').touched}">
-        <label for="phone" class="form-control-label">
+        <fieldset class="form-group col-6 pull-right" [ngClass]="{'has-danger': registerForm.get('phone').hasError('required') && registerForm.get('phone').touched}">
+          <label for="phone" class="form-control-label">
           Telefon
         </label>
-        <input type="text" class="form-control" placeholder="+90 (555) 555-5555" [textMask]="{mask: mask}" [(ngModel)]="myModel"
-          [formControl]="registerForm.get('phone')" [ngClass]="{'form-control-danger': registerForm.get('phone').hasError('required') && registerForm.get('phone').touched}"
-        />
-        <div class="form-control-feedback" *ngIf="registerForm.get('phone').hasError('required') && registerForm.get('phone').touched">Telefon gerekli</div>
-      </fieldset>
+          <input type="text" class="form-control" placeholder="+90 (555) 555-5555" [textMask]="{mask: mask}" [(ngModel)]="myModel"
+            [formControl]="registerForm.get('phone')" [ngClass]="{'form-control-danger': registerForm.get('phone').hasError('required') && registerForm.get('phone').touched}"
+          />
+          <div class="form-control-feedback" *ngIf="registerForm.get('phone').hasError('required') && registerForm.get('phone').touched">Telefon gerekli</div>
+        </fieldset>
+      </div>
+
+      <div class="row">
+        <div class="col-6 pull-left">
+          <fieldset class="form-group" [ngClass]="{'has-danger': registerForm.get('department').hasError('required') && registerForm.get('department').touched}">
+            <label for="department" class="form-control-label">
+          Departman
+        </label>
+            <select type="text" #selectDepartment class="form-control" [(ngModel)]="selectedDepartment" (change)="toInterns(selectedDepartment)"
+              [formControl]="registerForm.get('department')">
+                <option [ngValue]="null" disabled="true" [selected]="!selectedDepartment">-- Departman --</option>
+                <option *ngFor="let dep of departments" [ngValue]="dep._id">{{dep.name}}</option>
+              </select>
+            <div class="form-control-feedback" *ngIf="registerForm.get('department').hasError('required') && registerForm.get('department').touched">Bu alan gerekli</div>
+          </fieldset>
+
+          <fieldset class="form-group" [ngClass]="{'has-danger': registerForm.get('interns').hasError('required') && registerForm.get('interns').touched}">
+            <label for="interns" class="form-control-label">
+          Stajyerler
+        </label>
+            <ng2-completer class="completer-limit" (selected)="selectIntern($event)" [datasource]="dataService" [minSearchLength]="3"
+              [maxChars]="8" [clearSelected]="true" [inputClass]="'form-control'" [placeholder]="'Stajyerler'" [matchClass]="'match'"
+              [autofocus]="true" [textSearching]="false"></ng2-completer>
+            <input type="checkbox" style="display:none;" [formControl]="registerForm.get('interns')" [ngClass]="{'form-control-danger': registerForm.get('interns').hasError('required')}"
+            />
+            <div class="form-control-feedback" *ngIf="registerForm.get('interns').hasError('required') && registerForm.get('interns').touched">Bu alan gerekli</div>
+          </fieldset>
+        </div>
+
+        <fieldset class="form-group col-6 pull-right" style="overflow:auto;max-height:144px;">
+          <label for="interns" class="form-control-label">
+          Seçtiğiniz Stajyerler
+        </label>
+          <div class="list-group">
+            <li *ngFor="let int of selectedName" style="padding: 0.50rem 1.25rem;" class="list-group-item">{{int.name}}</li>
+          </div>
+        </fieldset>
       </div>
 
       <fieldset class="form-group" [ngClass]="{'has-danger': registerForm.get('username').hasError('required') && registerForm.get('username').touched}">

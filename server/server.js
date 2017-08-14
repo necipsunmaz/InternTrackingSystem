@@ -48,11 +48,15 @@ app.get('/', function (req, res) {
 
 app.post('/register', user.signup); // Register user
 
-app.post('/intern', intern.saveintern); // adds & update expense of the user
+app.post('/intern', intern.saveIntern); // adds & update expense of the user
 
 app.get('/departments', department.getAllDepartments); // Get all department
 
 app.get('/departments-form', department.getDepartmentsForForm); // Get all department
+
+app.get('/interns/:id', intern.getInternsForAcademician); // Get intern full name for academician
+
+app.put('/interns/:id', intern.academicianIntern); // Update intern by academician
 
 // express router
 var apiRoutes = express.Router();
@@ -82,23 +86,48 @@ apiRoutes.put('/password/:id', user.updatePassword); // API updates user passwor
 
 apiRoutes.delete('/user/:id', user.deleteUser); // This delete user, for SuperAdmin
 
+apiRoutes.put('/academician/verify/:status',user.academicianVerify); // Academician's intern verify by STATE
+
+apiRoutes.post('/academician/intern/:id',user.academicianInterns); // Interns post to academician
+
+apiRoutes.get('/academician/:status',user.getAcademicianByAdmin); // Get academician by department's admin
+
+apiRoutes.get('/academician/details/:id', user.getAcademician); // Get academician by ID
+
+
 // Intern Request
 
-apiRoutes.delete('/intern/:id', intern.delintern); //API removes the expense details of given expense id
+apiRoutes.delete('/intern/:id', intern.delIntern); //API removes the expense details of given expense id
 
-apiRoutes.get('/intern/:id', intern.getintern); // API returns expense details of given expense id
+apiRoutes.get('/intern/:id', intern.getIntern); // API returns expense details of given expense id
 
-apiRoutes.get('/getintern_admin/:verified', intern.getintern_admin); // API returns expense details of given expense id
+apiRoutes.get('/interns', intern.getInterns); // Get interns for admin department
 
-apiRoutes.put('/confirmintern/:id', intern.confirmintern); // API returns expense details of given expense id
+apiRoutes.get('/intern/name/:id', intern.getInternName); // API returns expense details of given expense id
 
-apiRoutes.get('/interns/:option', intern.getinterns); // API returns all intern by time or any
+apiRoutes.get('/intern/dates/:id', intern.getInternDates); // API returns expense details of given expense id
+
+apiRoutes.put('/intern/check/',intern.checkIntern) // Check Intern's roll call
+
+apiRoutes.get('/intern/:id/came', intern.getIncomingIntern); // Get incoming interns by state
+
+apiRoutes.get('/interns/academician/:id', intern.getInternsNameForAdmin) // Get intern name for academician confirm page
+
+apiRoutes.get('/getintern_admin/:verified', intern.getInternAdmin); // API returns expense details of given expense id
+
+apiRoutes.put('/confirmintern/:id', intern.confirmIntern); // API returns expense details of given expense id
+
+apiRoutes.get('/interns/:option', intern.getInternsByTime); // API returns all intern by time or any
+
+apiRoutes.get('/intern/analysis/:id', intern.getInternsTracking); 
 
 // Department Request
 
 apiRoutes.post('/department', department.saveDepartment); // Save or update dapartment
 
 apiRoutes.get('/department', department.getDepartmentDate); // Get department date for admin
+
+apiRoutes.get('/department/name/:id', department.getDepartmentName); // Get department date for admin
 
 apiRoutes.put('/department/:id', department.saveDapartmentDate); // Save new department date
 

@@ -38,6 +38,49 @@ export class UserService {
             .catch(this.handleError);
     }
 
+    getAcademicianDetails(id){
+        let headers = new Headers();
+        headers.append('Content-Type', 'application/json');
+        headers.append('Authorization', `${this.jwtToken}`);
+        let options = new RequestOptions({ headers: headers });
+
+        return this.http.get(`http://localhost:3000/api/academician/details/${id}`, options)
+            .map((response: Response) => response.json())
+            .catch(this.handleError);
+    }
+
+    getAcademicianByAdmin(status) {
+        let headers = new Headers();
+        headers.append('Content-Type', 'application/json');
+        headers.append('Authorization', `${this.jwtToken}`);
+        let options = new RequestOptions({ headers: headers });
+
+        return this.http.get(`http://localhost:3000/api/academician/${status}`, options)
+            .map((response: Response) => response.json())
+            .catch(this.handleError);
+    }
+
+    getInternsForAcademician(id) {
+        let headers = new Headers();
+        headers.append('Content-Type', 'application/json');
+        let options = new RequestOptions({ headers: headers });
+
+        return this.http.get(`http://localhost:3000/interns/${id}`, options)
+            .map((response: Response) => response.json())
+            .catch(this.handleError);
+    }
+
+    academicianVerify(status, academician) {
+        let headers = new Headers();
+        headers.append('Content-Type', 'application/json');
+        headers.append('Authorization', `${this.jwtToken}`)
+        let options = new RequestOptions({ headers: headers });
+
+        return this.http.put(`http://localhost:3000/api/academician/verify/${status}`, JSON.stringify(academician), options)
+            .map((response: Response) => response.json())
+            .catch(this.handleError);
+    }
+
     registerAdmin(oAdmin) {
         let headers = new Headers();
         headers.append('Content-Type', 'application/json');

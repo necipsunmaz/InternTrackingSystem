@@ -420,7 +420,7 @@ exports.getDepartmentDate = function (req, res, next) {
       });
     }
 
-    Department.findById(_id).exec(function (err, department) {
+    Department.findById(_id, 'dates').exec(function (err, department) {
       if (err) res.status(400).json({
         success: false,
         message: 'İşlem hataya uğradı! Hata: ' + err
@@ -430,6 +430,38 @@ exports.getDepartmentDate = function (req, res, next) {
         res.status(200).json({
           success: true,
           data: department.dates
+        });
+      }
+    });
+
+  } else {
+    res.status(401).json({
+      success: false,
+      message: 'Yetkisiz erişim!'
+    });
+  }
+}
+
+exports.getDepartmentName = function (req, res, next) {
+  if (req.decoded._doc.role === 1) {
+    const _id = req.params.id;
+    if (!_id) {
+      return res.status(422).send({
+        success: false,
+        message: 'Veriler geçerli değil veya doğrulanmadı.'
+      });
+    }
+
+    Department.findById(_id, 'name').exec(function (err, department) {
+      if (err) res.status(400).json({
+        success: false,
+        message: 'İşlem hataya uğradı! Hata: ' + err
+      });
+
+      if (department) {
+        res.status(200).json({
+          success: true,
+          data: department.name
         });
       }
     });

@@ -36,7 +36,6 @@ export class AuthGuard implements CanActivate {
         if (this.authService.isLoggedIn()) {
             return true;
         }
-
         this.router.navigate(['/user/signin']);
         return false;
     }
@@ -50,10 +49,7 @@ export class IsAdmin implements CanActivate {
 
     canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): boolean {
         let role = JSON.parse(localStorage.getItem('currentUser')).user.role;
-        if (role === 1 || role === 0) {
-            return true
-        }
-
+            return role === 1
     }
 }
 

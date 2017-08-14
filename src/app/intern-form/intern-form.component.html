@@ -4,7 +4,7 @@
     <div class="card">
       <div class="card-header">Stajyer Başvuru Formu</div>
       <form-wizard (onStepChanged)="onStepChanged($event)">
-        <wizard-step [title]="'Kişisel'" [icon]="'user'" [isValid]="internFormStep1.invalid" (onNext)="onStep1Next($event)">
+        <wizard-step [title]="'Kişisel'" [icon]="'user'" [isValid]="internFormStep1.valid" (onNext)="onStep1Next($event)">
           <form [formGroup]="internFormStep1">
 
             <div class="row">
@@ -106,7 +106,17 @@
             </div>
 
             <div class="row">
-              <fieldset class="form-group col-6 pull-left" [ngClass]="{'has-danger': internFormStep1.get('photo').hasError('required')}">
+              <fieldset class="form-group col-6 pull-left" [ngClass]="{'has-danger': internFormStep1.get('teacher').hasError('required') && internFormStep1.get('teacher').touched}">
+                <label for="teacher" class="form-control-label">
+          Akademisyen Adı
+        </label>
+                <input type="text" class="form-control" placeholder="İsim Soyisim" [formControl]="internFormStep1.get('teacher')" [ngClass]="{'form-control-danger': internFormStep1.get('teacher').hasError('required') && internFormStep1.get('teacher').touched}"
+                />
+                <div class="form-control-feedback" *ngIf="internFormStep1.get('teacher').hasError('required') && internFormStep1.get('teacher').touched">Adres gerekli</div>
+              </fieldset>
+
+              <fieldset class="form-group col-6 pull-right" style="padding-right:0;" [ngClass]="{'has-danger': internFormStep1.get('photo').hasError('required')}">
+                <div *ngIf="base64textString"><img class="pull-right img-fluid" [src]="base64textString" /></div>
                 <label for="photo" class="form-control-label">
           Fotoğraf
         </label><br>
@@ -115,13 +125,11 @@
             <input type="file" id="filePicker" style="display:none;"  (change)="showCropper($event)" accept="image/jpeg, image/png, image/bmp" class="custom-file-input"/>
               Yükle
         </label>
+
                 <input type="checkbox" style="display:none;" [formControl]="internFormStep1.get('photo')" [ngClass]="{'form-control-danger': internFormStep1.get('photo').hasError('required')}"
                 />
                 <div class="form-control-feedback" *ngIf="internFormStep1.get('photo').hasError('required')">Fotoğraf gerekli</div>
               </fieldset>
-              <div class="form-group col-6 avatar-lg">
-                <div *ngIf="base64textString"><img class="pull-right img-fluid" [src]="base64textString" /></div>
-              </div>
             </div>
           </form>
         </wizard-step>
@@ -134,7 +142,7 @@
               <label for="department" class="form-control-label">
           Departman
         </label>
-              <select type="text" #selectDepartment class="form-control" [(ngModel)]="selectedDepartment" (change)='toDefaultTime(selectDepartment.value)'
+              <select type="text" #selectDepartment class="form-control" [(ngModel)]="selectedDepartment" (change)="toDefaultTime(selectDepartment.value)"
                 [formControl]="internFormStep2.get('department')">
                 <option [ngValue]="null" disabled="true" [selected]="!selectedDepartment">-- Departman --</option>
                 <option *ngFor="let dep of departments" [ngValue]="dep._id">{{dep.name}}</option>

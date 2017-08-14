@@ -4,6 +4,7 @@ import { RouterModule } from '@angular/router';
 import { NgModule, LOCALE_ID } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { HttpModule, Http } from '@angular/http';
+import { BootstrapModalModule } from 'ng2-bootstrap-modal';
 
 import { TranslateModule, TranslateLoader } from '@ngx-translate/core';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
@@ -18,6 +19,7 @@ import { SharedModule } from './shared/shared.module';
 
 import { ToastrService } from './common/toastr.service';
 import { AuthService } from './user/auth.service';
+import { ConfirmComponent } from './common/confirm.component';
 import { AuthGuard, IsLoggedIn, IsAdmin, IsSuperAdmin, IsAcedemician } from './user/auth-guard.service';
 
 
@@ -29,12 +31,14 @@ export function createTranslateLoader(http: Http) {
   declarations: [
     AppComponent,
     AdminLayoutComponent,
-    AuthLayoutComponent
+    AuthLayoutComponent,
+    ConfirmComponent
   ],
   imports: [
     BrowserModule,
     BrowserAnimationsModule,
     SharedModule,
+    BootstrapModalModule,
     RouterModule.forRoot(AppRoutes),
     FormsModule,
     HttpModule,
@@ -49,6 +53,7 @@ export function createTranslateLoader(http: Http) {
     SidebarModule.forRoot()
   ],
   providers: [ToastrService, AuthService, AuthGuard, IsLoggedIn, IsAdmin, IsSuperAdmin, IsAcedemician, { provide: LOCALE_ID, useValue: "tr-TR" }],
+  entryComponents:[ConfirmComponent],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

@@ -41,6 +41,49 @@ export class InternService {
             .catch(this.handleError);
     }
 
+    getInternTracking(internid) {
+        let headers = new Headers();
+        headers.append('Content-Type', 'application/json');
+        headers.append('Authorization', `${this.jwtToken}`);
+        let options = new RequestOptions({ headers: headers });
+
+        return this.http.get(`http://localhost:3000/api/intern/analysis/${internid}`, options)
+            .map((response: Response) => response.json())
+            .catch(this.handleError);
+    }
+
+    getInternName(internid) {
+        let headers = new Headers();
+        headers.append('Content-Type', 'application/json');
+        headers.append('Authorization', `${this.jwtToken}`);
+        let options = new RequestOptions({ headers: headers });
+
+        return this.http.get(`http://localhost:3000/api/intern/name/${internid}`, options)
+            .map((response: Response) => response.json())
+            .catch(this.handleError);
+    }
+
+    putInternForAcademician(id, intern) {
+        let headers = new Headers();
+        headers.append('Content-Type', 'application/json');
+        let options = new RequestOptions({ headers: headers });
+
+        return this.http.put(`http://localhost:3000/interns/${id}`, JSON.stringify(intern), options)
+            .map((response: Response) => response.json())
+            .catch(this.handleError);
+    }
+
+    getInternForAdmin(id) {
+        let headers = new Headers();
+        headers.append('Content-Type', 'application/json');
+        headers.append('Authorization', `${this.jwtToken}`);
+        let options = new RequestOptions({ headers: headers });
+
+        return this.http.get(`http://localhost:3000/api/interns/academician/${id}`, options)
+            .map((response: Response) => response.json())
+            .catch(this.handleError);
+    }
+
     delIntern(intid) {
         let headers = new Headers();
         headers.append('Content-Type', 'application/json');
@@ -51,7 +94,6 @@ export class InternService {
             .map((response: Response) => response.json())
             .catch(this.handleError);
     }
-
 
     getInternByVerify(verified: boolean) {
         let headers = new Headers();

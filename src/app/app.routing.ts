@@ -35,7 +35,7 @@ export const AppRoutes: Routes = [{
     path: 'analyzes',
     loadChildren: './analyzes/analyzes.module#AnalyzesModule'
   }, {
-    path: 'intern',
+    path: 'interns',
     loadChildren: './intern/intern.module#InternModule'
   },{
     path: 'departments',
