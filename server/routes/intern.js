@@ -13,7 +13,7 @@ exports.saveIntern = function (req, res, next) {
   const department = req.body.department;
   const tc = req.body.tc;
   const dob = req.body.dob;
-  const starteddate =  req.body.starteddate;
+  const starteddate = req.body.starteddate;
   const endeddate = req.body.endeddate;
   const teacher = req.body.teacher;
   const phone = req.body.phone;
@@ -172,15 +172,47 @@ exports.getIntern = function (req, res, next) {
 exports.getInterns = function (req, res, next) {
   if (req.decoded._doc.role === 1) {
     const department = req.decoded._doc.department;
-
-    Intern.find({department : department}).exec(function (err, intern) {
+    Intern.find({
+      department: department,
+      verified: true,
+      isComplete: false
+    }, "_id firstname lastname phone email starteddate photo", function (err, intern) {
       if (err) {
         res.status(400).json({
           success: false,
           message: 'İşlem hataya uğradı! Hata: ' + err
         });
       }
-      
+
+      res.status(201).json({
+        success: true,
+        data: intern
+      });
+    });
+  } else {
+    return res.status(401).send({
+      success: false,
+      message: 'Yetkisiz giriş!'
+    });
+  }
+}
+
+// get interns for tracking
+exports.getInternsForTracking = function (req, res, next) {
+  if (req.decoded._doc.role === 1) {
+    const department = req.decoded._doc.department;
+    Intern.find({
+      department: department,
+      verified: true,
+      isComplete: false
+    }, "_id firstname lastname email phone", function (err, intern) {
+      if (err) {
+        res.status(400).json({
+          success: false,
+          message: 'İşlem hataya uğradı! Hata: ' + err
+        });
+      }
+
       res.status(201).json({
         success: true,
         data: intern
@@ -308,7 +340,9 @@ exports.confirmIntern = function (req, res, next) {
 
 // get intern by admin
 exports.getInternAdmin = function (req, res, next) {
-  Intern.find({
+  if(req.decoded._doc.role === 1){
+    Intern.find({
+    department: req.decoded._doc.department,
     verified: req.params.verified
   }, function (err, intern) {
     if (err) {
@@ -322,23 +356,27 @@ exports.getInternAdmin = function (req, res, next) {
       data: intern
     });
   });
+  } else {
+      res.status(401).send({
+        success: false,
+        message: 'Yetkisiz giriş!'
+    });
+  }
 }
 
 // get interns by time
-exports.getInternsByTime = function (req, res, next) {
-  var time;
-  switch (req.params.option) {
-    case 'month':
+exports.postDaysByTime = function (req, res, next) {
+  if(req.decoded._doc.role === 1){
+    let interns = req.body.interns;
+    let today =   moment().format('YYYY-MM-DD');//moment().startOf('day'); 
+    let aWeekAgo = moment(today).subtract(7, 'days').format('YYYY-MM-DD'); //moment(moment().subtract(15, "days").format('LL'));
+    let aMontAgo = moment(today).subtract(1, "month").format('YYYY-MM-DD');
+  switch (req.body.time) {
+    case 'day':
       {
-        time = new Date();
-        time.setDate(time.getDate() - 30)
-        Intern.find({
-          starteddate: {
-            "$lt": time
-          },
-          endeddate: {
-            "$gte": Date()
-          }
+        Days.find({
+          $or: interns,
+          date: today
         }).exec(function (err, intern) {
           if (err) {
             res.status(400).json({
@@ -355,15 +393,9 @@ exports.getInternsByTime = function (req, res, next) {
       break;
     case 'week':
       {
-        time = new Date();
-        time.setDate(time.getDate() - 7)
-        Intern.find({
-          starteddate: {
-            "$lt": time
-          },
-          endeddate: {
-            "$gte": Date()
-          }
+        Days.find({
+          $or: interns,
+          date: { $gte : aWeekAgo, $lt: today }
         }).exec(function (err, intern) {
           if (err) {
             res.status(400).json({
@@ -378,15 +410,29 @@ exports.getInternsByTime = function (req, res, next) {
         });
       }
       break;
-    case 'day':
+      case 'month':
       {
-        Intern.find({
-          starteddate: {
-            "$lt": Date()
-          },
-          endeddate: {
-            "$gt": Date()
+        Days.find({
+          $or: interns,
+          date: { $gte : aMontAgo, $lt: today }
+        }).exec(function (err, intern) {
+          if (err) {
+            res.status(400).json({
+              success: false,
+              message: 'İşlem hataya uğradı! Hata: ' + err
+            });
           }
+          res.status(201).json({
+            success: true,
+            data: intern
+          });
+        });
+      }
+      break;
+      case 'period':
+      {
+        Days.find({
+          $or: interns
         }).exec(function (err, intern) {
           if (err) {
             res.status(400).json({
@@ -409,6 +455,37 @@ exports.getInternsByTime = function (req, res, next) {
         })
       }
       break;
+    }
+  } else {
+    res.status(401).send({
+      success: false,
+      message: 'Yetkisiz giriş!'
+    });
+  }
+}
+
+exports.postDaysForTracking = function (req, res, next) {
+  if(req.decoded._doc.role === 1){
+    const am = req.body.am;
+    const pm = req.body.pm;
+    const days = req.body.days;
+    Days.update({ $or: days}, {am: am, pm: pm}, {multi: true}).exec(function(err){
+       if (err) {
+            res.status(400).json({
+              success: false,
+              message: 'İşlem hataya uğradı! Hata: ' + err
+            });
+          }
+          res.status(201).json({
+            success: true,
+            message: "İşlem başarıyla gerçekleştirildi."
+          });
+    });
+  } else {
+    return res.status(401).send({
+      success: false,
+      message: 'Yetkisiz giriş!'
+    });
   }
 }
 
@@ -467,9 +544,9 @@ exports.checkIntern = function (req, res, next) {
           day.pm = check;
           break;
       }
-      console.log("burayakadar geldi");
+
       var promise = day.save(function (err) {
-        console.log('buraya gelmez');
+
         if (err) {
           res.status(400).json({
             success: false,
@@ -528,6 +605,7 @@ exports.getInternsForAcademician = function (req, res, next) {
   departmentId = req.params.id;
   Intern.find({
     department: departmentId,
+    verified: true,
     academician: null
   }, '_id firstname lastname', function (err, intern) {
     if (err) {

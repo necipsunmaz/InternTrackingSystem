@@ -52,7 +52,9 @@ app.post('/intern', intern.saveIntern); // adds & update expense of the user
 
 app.get('/departments', department.getAllDepartments); // Get all department
 
-app.get('/departments-form', department.getDepartmentsForForm); // Get all department
+app.get('/departments-form', department.getDepartmentsForForm); // Get all department for intern form
+
+app.get('/academician-form', department.getDepartmentsForAcademicianForm); // Get all department name for academician
 
 app.get('/interns/:id', intern.getInternsForAcademician); // Get intern full name for academician
 
@@ -103,6 +105,8 @@ apiRoutes.get('/intern/:id', intern.getIntern); // API returns expense details o
 
 apiRoutes.get('/interns', intern.getInterns); // Get interns for admin department
 
+apiRoutes.get('/interns/tracking', intern.getInternsForTracking); // Get interns for tracking
+
 apiRoutes.get('/intern/name/:id', intern.getInternName); // API returns expense details of given expense id
 
 apiRoutes.get('/intern/dates/:id', intern.getInternDates); // API returns expense details of given expense id
@@ -117,7 +121,9 @@ apiRoutes.get('/getintern_admin/:verified', intern.getInternAdmin); // API retur
 
 apiRoutes.put('/confirmintern/:id', intern.confirmIntern); // API returns expense details of given expense id
 
-apiRoutes.get('/interns/:option', intern.getInternsByTime); // API returns all intern by time or any
+apiRoutes.post('/interns/days', intern.postDaysByTime); // API returns all intern by time or any
+
+apiRoutes.post('/days/tracking', intern.postDaysForTracking); // Days update for tracking
 
 apiRoutes.get('/intern/analysis/:id', intern.getInternsTracking); 
 

@@ -20,7 +20,7 @@ import { IAcademician } from './academician';
   selector: 'app-list',
   templateUrl: './academician.component.html',
   styleUrls: ['./academician.component.scss'],
-  providers: [PromptIntern, DialogService, DepartmentsService]
+  providers: [DialogService]
 })
 export class AcademicianComponent implements OnInit {
 

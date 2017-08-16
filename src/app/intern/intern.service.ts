@@ -52,6 +52,17 @@ export class InternService {
             .catch(this.handleError);
     }
 
+    getInternsForDepartment() {
+        let headers = new Headers();
+        headers.append('Content-Type', 'application/json');
+        headers.append('Authorization', `${this.jwtToken}`);
+        let options = new RequestOptions({ headers: headers });
+
+        return this.http.get(`http://localhost:3000/api/interns`, options)
+            .map((response: Response) => response.json())
+            .catch(this.handleError);
+    }
+
     getInternName(internid) {
         let headers = new Headers();
         headers.append('Content-Type', 'application/json');
@@ -80,6 +91,39 @@ export class InternService {
         let options = new RequestOptions({ headers: headers });
 
         return this.http.get(`http://localhost:3000/api/interns/academician/${id}`, options)
+            .map((response: Response) => response.json())
+            .catch(this.handleError);
+    }
+
+    getInternForTracking() {
+        let headers = new Headers();
+        headers.append('Content-Type', 'application/json');
+        headers.append('Authorization', `${this.jwtToken}`);
+        let options = new RequestOptions({ headers: headers });
+
+        return this.http.get(`http://localhost:3000/api/interns/tracking`, options)
+            .map((response: Response) => response.json())
+            .catch(this.handleError);
+    }
+
+    postDaysByTime(intern) {
+        let headers = new Headers();
+        headers.append('Content-Type', 'application/json');
+        headers.append('Authorization', `${this.jwtToken}`);
+        let options = new RequestOptions({ headers: headers });
+
+        return this.http.post(`http://localhost:3000/api/interns/days`, JSON.stringify(intern), options)
+            .map((response: Response) => response.json())
+            .catch(this.handleError);
+    }
+
+    postDaysForTracking(intern) {
+        let headers = new Headers();
+        headers.append('Content-Type', 'application/json');
+        headers.append('Authorization', `${this.jwtToken}`);
+        let options = new RequestOptions({ headers: headers });
+
+        return this.http.post(`http://localhost:3000/api/days/tracking`, JSON.stringify(intern), options)
             .map((response: Response) => response.json())
             .catch(this.handleError);
     }

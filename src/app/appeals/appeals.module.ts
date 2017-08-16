@@ -28,15 +28,13 @@ import { UserService } from '../user/user.service';
   ],
   declarations: [
     AcademicianComponent,
-    InternComponent,
-    PromptIntern,
-    PromptAcademician
+    InternComponent
   ],
    providers: [
     InternService,
     UserService
   ],
-  bootstrap: [InternComponent, PromptIntern, PromptAcademician]
+  bootstrap: [InternComponent]
 })
 
 export class AppealsModule { }

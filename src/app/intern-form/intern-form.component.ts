@@ -24,7 +24,7 @@ export class InternFormComponent implements OnInit {
   constructor(private fb: FormBuilder,
     private departmentsService: DepartmentsService,
     private datePickerService: DatePickerService,
-    public ngbDateParserFormatter: NgbDateParserFormatter,
+    private ngbDateParserFormatter: NgbDateParserFormatter,
     private promptComponent: PromptComponent,
     private dialogService: DialogService,
     private router: Router,

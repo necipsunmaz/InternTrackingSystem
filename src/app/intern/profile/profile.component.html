@@ -17,22 +17,21 @@
         </tr>
       </thead>
       <tbody>
-        <tr *ngFor="let user of users">
+        <tr *ngFor="let row of rows">
           <td>
-            <img src="{{user.picture.large}}" class="avatar-md rounded" alt="">
+            <img src="{{row.photo}}" class="avatar-md rounded" alt="">
           </td>
           <td>
-            <a href="#" class="d-block text-capitalize" (click)="$event.preventDefault();open(content)">{{user.name.title}} {{user.name.first}} {{user.name.last}}</a>
-            <small>{{user.login.username}}</small>
+            <a href="#" class="d-block text-capitalize" (click)="$event.preventDefault();showIntern(row._id);">{{row.firstname}} {{row.lastname}}</a>
           </td>
-          <td>{{ user.registered | date:'yMMMd' }}</td>
+          <td>{{ row.starteddate | date:'yMMMd' }}</td>
           <td>
-            <span class="badge badge-default text-uppercase">{{user.location.city}}</span>
+            <span class="badge badge-default text-uppercase">{{row.email}}</span>
           </td>
           <td>
-            <a href="#">{{user.email}}</a>
+            <a href="#">{{row.phone}}</a>
           </td>
-          <td>{{user.cell}}</td>
+          <td>{{row.phone}}</td>
         </tr>
       </tbody>
     </table>

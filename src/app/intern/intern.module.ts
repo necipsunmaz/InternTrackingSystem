@@ -12,7 +12,7 @@ import { CalendarModule, CalendarDateFormatter } from 'angular-calendar';
 import { AuthGuard } from '../user/auth-guard.service';
 import { AuthService } from '../user/auth.service';
 import { InternService } from './intern.service';
-
+import { PromptIntern } from '../common/prompts/intern.prompt';
 import { InternRoutes } from './intern.routing';
 
 import { AnalysisComponent } from './calendar/calendar.component';

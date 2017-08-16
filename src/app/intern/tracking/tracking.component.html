@@ -1,61 +1,104 @@
-<div class="card">
-  <div class="card-header">Devam/Devamsızlık - {{model.options}} </div>
-  <div class="card-block">
-    <input type="text" class="form-control mb-3" placeholder="İsime göre filtrelemek için..." required (keyup)='updateFilter($event)'>
-  </div>
-  <div class="btn-group" style="display:block;">
-    <button class="btn" [class.btn-primary]="model.options === item" [class.btn-secondary]="model.options !== item" *ngFor="let item of radioItems"
-      type="button" name="options" (click)="model.options=item;listRefresh();">{{item}}</button>
+<div class="row">
+  <div class="col-lg-7">
+    <div class="card">
+      <div class="card-header">Dönem İçi Aktif Stajyerler</div>
+      <div class="card-block">
+        <input type="text" class="form-control mb-3" placeholder="İsime göre filtrelemek için..." required (keyup)='updateFilterIntern($event)'>
+      </div>
+      <div class="btn-group" style="display:block;">
+        <button class="btn" [class.btn-primary]="model.options === item" [class.btn-secondary]="model.options !== item" *ngFor="let item of radioItems"
+          type="button" name="options" (click)="model.options=item;listRefresh();">{{item}}</button>
+      </div>
 
-    <div class="input-group" style="width:auto; float:right;margin-right: 20px;">
-      <input class="form-control" placeholder="Staj Başlama Tar." name="dp" [displayMonths]=2 [navigation]="navigation" ngbDatepicker
-        #d2="ngbDatepicker" />
-      <div class="input-group-addon" (click)="d2.toggle()">
-        <i class="icon icon-basic-calendar" style="cursor: pointer;"></i>
-      </div>
-    </div>
-    <div class="input-group" style="width:auto; float:right;margin-right: 10px;">
-      <input class="form-control" placeholder="Staj Bitirme Tar." name="dp" [displayMonths]=2 [navigation]="navigation" ngbDatepicker
-        #d3="ngbDatepicker" />
-      <div class="input-group-addon" (click)="d3.toggle()">
-        <i class="icon icon-basic-calendar" style="cursor: pointer;"></i>
-      </div>
+      <ngx-datatable [rows]="rowsInterns" [columnMode]="'force'" [headerHeight]="40" [footerHeight]="50" [rowHeight]="'auto'" [selected]="selectedInterns"
+        [selectionType]="'multiClick'" (select)="onSelectIntern($event)">
+        <ngx-datatable-footer>
+          <ng-template ngx-datatable-footer-template let-rowCount="rowCount" let-pageSize="pageSize" let-selectedCount="selectedCount"
+            let-curPage="curPage" let-offset="offset">
+            <div class="page-count" *ngIf="!footerTemplate">
+              <span *ngIf="selectedCount">
+                    {{selectedCount.toLocaleString()}} seçili / 
+                  </span> {{rowCount.toLocaleString()}} toplam
+            </div>
+          </ng-template>
+        </ngx-datatable-footer>
+        <ngx-datatable-column [width]="30" [sortable]="false" [canAutoResize]="false" [draggable]="false" [resizeable]="false">
+          <ng-template ngx-datatable-header-template let-value="value" let-allRowsSelected="allRowsSelected" let-selectFn="selectFn">
+            <label style="padding:0" class="datatable-checkbox">
+                    <input type="checkbox" [checked]="allRowsSelected" (change)="selectFn(!allRowsSelected)"/>
+                </label>
+          </ng-template>
+          <ng-template ngx-datatable-cell-template let-value="value" let-isSelected="isSelected" let-onCheckboxChangeFn="onCheckboxChangeFn">
+            <label style="padding:0" class="datatable-checkbox">
+                    <input type="checkbox" [checked]="isSelected" (change)="onCheckboxChangeFn($event)"/>
+                </label>
+          </ng-template>
+        </ngx-datatable-column>
+        <ngx-datatable-column name="İsim Soyisim">
+          <ng-template let-row="row" ngx-datatable-cell-template>
+            {{row.firstname}} {{row.lastname}}
+          </ng-template>
+        </ngx-datatable-column>
+        <ngx-datatable-column name="Eposta" prop="email"></ngx-datatable-column>
+        <ngx-datatable-column name="Telefon" prop="phone"></ngx-datatable-column>
+      </ngx-datatable>
     </div>
   </div>
-  <ngx-datatable #datatable [columns]="columns" [columnMode]="'force'" [headerHeight]="40" [footerHeight]="50" [rowHeight]="'auto'"
-    [limit]="10" [rows]='rows'>
-    <ngx-datatable-row-detail [rowHeight]="100" #myDetailRow (toggle)="onDetailToggle($event)">
-      <ng-template let-row="row" ngx-datatable-row-detail-template>
-        <div style="padding-left:35px;">
-          <div><strong>Address</strong></div>
-          <div>{{row.address}}</div>
+
+  <div class="col-lg-5">
+    <div class="card">
+      <div class="card-header">Devam/Devamsızlık - {{model.options}} </div>
+      <div class="card-block">
+        <input type="text" class="form-control mb-3" placeholder="Tarihe göre filtrelemek için ÖRNK(2017-08-14)..." required (keyup)='updateFilterDay($event)'>
+        <div *ngIf="selectDay.selected.length !== 0" style="width: 100%" class="btn-group">
+          <button style="width: 33.3333%" class="btn btn-primary" (click)="saveDays()">
+          Kaydet
+        </button>
+          <button style="width: 33.3333%" class="btn btn-outline-{{amButton ? 'success' : 'danger'}}" (click)="amButton = !amButton">
+          {{ amButton ? "Geldi" : "Gelmedi"}}
+        </button>
+          <button style="width: 33.3333%" class="btn btn-outline-{{pmButton ? 'success' : 'danger'}}" (click)="pmButton = !pmButton">
+          {{ pmButton ? "Geldi" : "Gelmedi"}}
+        </button>
         </div>
-      </ng-template>
-    </ngx-datatable-row-detail>
-    <ngx-datatable-column name="İsim" [width]="160" prop="firstname"></ngx-datatable-column>
-    <ngx-datatable-column name="Soyisim" [width]="160" prop="lastname"></ngx-datatable-column>
-    <ngx-datatable-column name="Cinsiyet" [width]="160" prop="gender">
-      <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
-        <div *ngIf="value===true">Erkek</div>
-        <div *ngIf="value===false">Kadın</div>
-      </ng-template>
-    </ngx-datatable-column>
-    <ngx-datatable-column name="Email" [width]="300" prop="email"></ngx-datatable-column>
-    <ngx-datatable-column name="Doğum Tarihi" [width]="300" prop="dob">
-      <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
-        {{value | date:'yMMMd'}}
-      </ng-template>
-    </ngx-datatable-column>
-    <ngx-datatable-column name="Staj Başlama" [width]="300" prop="starteddate">
-      <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
-        {{value | date:'yMMMd'}}
-      </ng-template>
-    </ngx-datatable-column>
-    <ngx-datatable-column name="Staj Bitirme" [width]="300" prop="endeddate">
-      <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
-        {{value | date:'yMMMd'}}
-      </ng-template>
-    </ngx-datatable-column>
-  </ngx-datatable>
-
+        <div *ngIf="rowsDays.length === 0" role="alert" class="alert alert-info alert-dismissible">
+          Bu alanda seçilen stajyerlere ait GÜN - HAFTA - AY ve DÖNEMLİK olarak devam bilgileri listenmektedir.
+        </div>
+      </div>
+      <ngx-datatable *ngIf="rowsDays.length !== 0" [rows]="rowsDays" [limit]="10" [columnMode]="'force'" [headerHeight]="50" [footerHeight]="50"
+        [rowHeight]="'auto'" [selected]="selectedDays" [selectionType]="'multiClick'" (select)="onSelectDays($event)">
+        <ngx-datatable-column [width]="30" [sortable]="false" [canAutoResize]="false" [draggable]="false" [resizeable]="false">
+          <ng-template ngx-datatable-header-template let-value="value" let-allRowsSelected="allRowsSelected" let-selectFn="selectFn">
+            <label style="padding:0" class="datatable-checkbox">
+                    <input type="checkbox" [checked]="allRowsSelected" (change)="selectFn(!allRowsSelected)"/>
+                </label>
+          </ng-template>
+          <ng-template ngx-datatable-cell-template let-value="value" let-isSelected="isSelected" let-onCheckboxChangeFn="onCheckboxChangeFn">
+            <label style="padding:0" class="datatable-checkbox">
+                    <input type="checkbox" [checked]="isSelected" (change)="onCheckboxChangeFn($event)"/>
+                </label>
+          </ng-template>
+        </ngx-datatable-column>
+        <ngx-datatable-column name="Tarih" prop="date">
+          <ng-template let-row="row" ngx-datatable-cell-template>
+            {{row.date | date:'yMMMd'}}
+          </ng-template>
+        </ngx-datatable-column>
+        <ngx-datatable-column name="Öğleden Önce" prop="am">
+          <ng-template let-row="row" ngx-datatable-cell-template>
+            <div *ngIf="row.am===true">Geldi</div>
+            <div *ngIf="row.am===false">Gelmedi</div>
+            <div *ngIf="row.am===null">Girilmedi</div>
+          </ng-template>
+        </ngx-datatable-column>
+        <ngx-datatable-column name="Öğleden Sonra" prop="pm">
+          <ng-template let-row="row" ngx-datatable-cell-template>
+            <div *ngIf="row.pm===true">Geldi</div>
+            <div *ngIf="row.pm===false">Gelmedi</div>
+            <div *ngIf="row.pm===null">Girilmedi</div>
+          </ng-template>
+        </ngx-datatable-column>
+      </ngx-datatable>
+    </div>
+  </div>
 </div>

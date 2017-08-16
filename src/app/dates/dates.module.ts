@@ -26,8 +26,6 @@ import { DepartmentsService } from '../departments/departments.service';
   ],
   declarations: [
     DatesComponent,
-  ], providers: [
-    DepartmentsService
   ]
 })
 

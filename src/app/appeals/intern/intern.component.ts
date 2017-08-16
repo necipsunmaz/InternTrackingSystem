@@ -16,7 +16,7 @@ import { ConfirmComponent } from '../../common/confirm.component';
   selector: 'app-list',
   templateUrl: './intern.component.html',
   styleUrls: ['./intern.component.scss'],
-  providers: [PromptIntern, DialogService, DepartmentsService]
+  providers: [DialogService]
 })
 export class InternComponent implements OnInit {
 
@@ -31,19 +31,14 @@ export class InternComponent implements OnInit {
   }
 
   interns: IIntern[];
-  userObj: any;
-  exptotal: number;
   form = new FormGroup({});
   radioItems = ['onaylanmayan', 'onaylanan'];
   model = { options: 'onaylanmayan' };
-  basildimi = false;
-
   button = this.radioItems[0];
 
   onSubmit(): void {
     console.log(this.model);
     this.fetchReport();
-    this.basildimi = true;
   }
 
   checkVerify(veris: string): boolean {
@@ -55,23 +50,8 @@ export class InternComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.userObj = this.authService.currentUser;
-    this.listRefresh();
-  }
-
-  /**
-  checkVerify(veris: string): boolean {
-    if (veris == "Onaylananlar") { return true } else { return false };
-  }
-  */
-
-  listRefresh() {
-    console.log(this.model);
     this.fetchReport();
-    this.basildimi = true;
   }
-
-
 
   fetchReport() {
     this.internService.getInternByVerify(this.checkVerify(this.model.options))
@@ -90,7 +70,7 @@ export class InternComponent implements OnInit {
 
   verifyIntern(internid, state, rowIndex: number) {
     if (state) {
-      let disposable = this.dialogService.addDialog(ConfirmComponent, {
+     this.dialogService.addDialog(ConfirmComponent, {
         title: 'Stajyer Onayla',
         message: 'Stajyeri onayladığında stajyere ait tarih aralığındaki tüm günler Devam/Devamsızlık takviminde etkinleşecektir.'
       }).subscribe((isConfirmed) => {
@@ -112,7 +92,7 @@ export class InternComponent implements OnInit {
         }
       });
     } else {
-      let disposable = this.dialogService.addDialog(ConfirmComponent, {
+     this.dialogService.addDialog(ConfirmComponent, {
         title: 'Stajyer Onayı Kaldır',
         message: 'Stajyer onayını kaldırdığın takdirde şu ana kadar kaydedilmiş tüm Devam/Devamsızlık bilgileri takvimden kaldırılacaktır! Bu değişiklik geri alınamaz.'
       }).subscribe((isConfirmed) => {

@@ -67,8 +67,8 @@
           Stajyerler
         </label>
             <ng2-completer class="completer-limit" (selected)="selectIntern($event)" [datasource]="dataService" [minSearchLength]="3"
-              [maxChars]="8" [clearSelected]="true" [inputClass]="'form-control'" [placeholder]="'Stajyerler'" [matchClass]="'match'"
-              [autofocus]="true" [textSearching]="false"></ng2-completer>
+              [maxChars]="8" [clearSelected]="true" [inputClass]="'form-control'" [textNoResults]="'Stajyer Bulunamadı'" [placeholder]="'Stajyerler'"
+              [matchClass]="'match'" [autofocus]="true" [textSearching]="false"></ng2-completer>
             <input type="checkbox" style="display:none;" [formControl]="registerForm.get('interns')" [ngClass]="{'form-control-danger': registerForm.get('interns').hasError('required')}"
             />
             <div class="form-control-feedback" *ngIf="registerForm.get('interns').hasError('required') && registerForm.get('interns').touched">Bu alan gerekli</div>
@@ -79,8 +79,13 @@
           <label for="interns" class="form-control-label">
           Seçtiğiniz Stajyerler
         </label>
-          <div class="list-group">
-            <li *ngFor="let int of selectedName" style="padding: 0.50rem 1.25rem;" class="list-group-item">{{int.name}}</li>
+          <div *ngFor="let int of selectedName" class="list-group">
+            <li style="padding: 0.50rem 1rem;" class="list-group-item">
+              <span class="pull-left" style="width:94%">{{int.name}}</span>
+              <button aria-label="Close" (click)="closeIntern(int._id);" class="close pull-right" type="button">
+                <span aria-hidden="true">×</span>
+              </button>
+            </li>
           </div>
         </fieldset>
       </div>

@@ -1,11 +1,14 @@
 import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
-import { AuthService } from '../user/auth.service';
+import { DialogService } from "ng2-bootstrap-modal";
 import { DatePipe } from '@angular/common';
 import { Router, ActivatedRoute, Params } from '@angular/router';
+import { FormBuilder, FormGroup, Validators, FormControl, AbstractControl } from '@angular/forms';
+
+import { AuthService } from '../user/auth.service';
+import { ConfirmComponent } from '../common/confirm.component';
 import { ToastrService } from '../common/toastr.service';
 import { UserService } from '../user/user.service';
 import { Admins } from './admins';
-import { FormBuilder, FormGroup, Validators, FormControl, AbstractControl } from '@angular/forms';
 
 
 function comparePassword(c: AbstractControl): { [key: string]: boolean } | null {
@@ -26,7 +29,8 @@ function comparePassword(c: AbstractControl): { [key: string]: boolean } | null 
 @Component({
   selector: 'app-list',
   templateUrl: './admins.component.html',
-  styleUrls: ['./admins.component.scss']
+  styleUrls: ['./admins.component.scss'],
+  providers:[DialogService]
 })
 export class AdminsComponent implements OnInit {
 
@@ -34,6 +38,7 @@ export class AdminsComponent implements OnInit {
     private authService: AuthService,
     private userService: UserService,
     private route: ActivatedRoute,
+    private dialogService: DialogService,
     private router: Router,
     private toastr: ToastrService,
     private changeDetectorRef: ChangeDetectorRef) {
@@ -75,9 +80,8 @@ export class AdminsComponent implements OnInit {
   saveAdmin(formdata: any): void {
     if (this.adminForm.dirty && this.adminForm.valid) {
       let theForm = this.adminForm.value;
-      if (theForm._id === null) theForm.password = this.adminForm.value.passwordGroup.password;
+      if (theForm._id == ""){ theForm.password = this.adminForm.value.passwordGroup.password}
       delete theForm.passwordGroup;
-
       this.userService.registerAdmin(theForm)
         .subscribe(data => {
           if (data.success === false) {
@@ -129,18 +133,25 @@ export class AdminsComponent implements OnInit {
   }
 
   deleteAdmin(_id, rowIndex: number) {
-    this.userService.deleteUser(_id).subscribe(message => {
-      if (message.success === false) {
-        if (message.errcode) {
-          this.authService.logout();
-          this.router.navigate(['login']);
-        }
-        this.toastr.error(message.message);
-      } else {
-        this.toastr.success(message.message);
-        this.admins.splice(rowIndex, 1);
-        this.changeDetectorRef.detectChanges();
+    this.dialogService.addDialog(ConfirmComponent, {
+      title: 'Yönetici Silme',
+      message: 'Yöneticiyi silmek istediğine emin misin?'
+    }).subscribe((isConfirmed) => {
+      if (isConfirmed) {
+        this.userService.deleteUser(_id).subscribe(message => {
+          if (message.success === false) {
+            if (message.errcode) {
+              this.authService.logout();
+              this.router.navigate(['login']);
+            }
+            this.toastr.error(message.message);
+          } else {
+            this.toastr.success(message.message);
+            this.admins.splice(rowIndex, 1);
+            this.changeDetectorRef.detectChanges();
+          }
+        }); 
       }
-    })
+    });
   }
 } 

@@ -20,13 +20,13 @@
       <tbody>
         <tr *ngFor="let academ of academicians;let rowIndex = index">
           <td>
-            <a href="#" (click)="$event.preventDefault();showAcademician(academ._id);" class="d-block text-capitalize">{{academ.firstname}} {{academ.lastname}}</a> 
+            <a href="#" (click)="$event.preventDefault();showAcademician(academ._id);" class="d-block text-capitalize">{{academ.firstname}} {{academ.lastname}}</a>
           </td>
           <td>
-            <a  *ngFor="let int of academ.intern" href="#" (click)="$event.preventDefault();showIntern(int._id);" style="margin-right:5px;" 
-            class="badge badge-default text-uppercase">{{int.firstname}} {{int.lastname}}</a>
+            <a *ngFor="let int of academ.intern" href="#" (click)="$event.preventDefault();showIntern(int._id);" style="margin-right:5px;"
+              class="badge badge-default text-uppercase">{{int.firstname}} {{int.lastname}}</a>
           </td>
-         <td>
+          <td>
             <button type="button" *ngIf="checkVerify(model.options) == false" class="btn btn-primary" aria-label="View" (click)="verifyAcademician(true,academ._id,rowIndex)">
                                     <span class="glyphicon glyphicon-eye-open" aria-hidden="true">Onayla</span>
                                 </button>

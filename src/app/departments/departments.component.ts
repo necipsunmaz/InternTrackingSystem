@@ -1,16 +1,20 @@
 import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
-import { AuthService } from '../user/auth.service';
+import { DialogService } from "ng2-bootstrap-modal";
 import { DatePipe } from '@angular/common';
 import { Router, ActivatedRoute, Params } from '@angular/router';
+import { FormBuilder, FormGroup, Validators, FormControl, AbstractControl } from '@angular/forms';
+
+import { ConfirmComponent } from '../common/confirm.component';
+import { AuthService } from '../user/auth.service';
 import { ToastrService } from '../common/toastr.service';
 import { DepartmentsService } from './departments.service';
 import { Departments } from './departments';
-import { FormBuilder, FormGroup, Validators, FormControl, AbstractControl } from '@angular/forms';
 
 @Component({
   selector: 'app-list',
   templateUrl: './departments.component.html',
-  styleUrls: ['./departments.component.scss']
+  styleUrls: ['./departments.component.scss'],
+  providers: [DialogService]
 })
 export class DepartmentsComponent implements OnInit {
 
@@ -18,6 +22,7 @@ export class DepartmentsComponent implements OnInit {
     private authService: AuthService,
     private departmentService: DepartmentsService,
     private route: ActivatedRoute,
+    private dialogService: DialogService,
     private router: Router,
     private toastr: ToastrService,
     private changeDetectorRef: ChangeDetectorRef) {
@@ -113,7 +118,7 @@ export class DepartmentsComponent implements OnInit {
                 this.departments = data.data;
               }
             });
-          });          
+          });
         }
       });
   }
@@ -129,18 +134,25 @@ export class DepartmentsComponent implements OnInit {
   }
 
   deleteDepartment(_id, rowIndex: number) {
-    this.departmentService.deleteDepartment(_id).subscribe(message => {
-      if (message.success === false) {
-        if (message.errcode) {
-          this.authService.logout();
-          this.router.navigate(['login']);
-        }
-        this.toastr.error(message.message);
-      } else {
-        this.toastr.success(message.message);
-        this.departments.splice(rowIndex, 1);
-        this.changeDetectorRef.detectChanges();
+    this.dialogService.addDialog(ConfirmComponent, {
+      title: 'Departman Silme Onayı',
+      message: 'Departmanı silmen departmana ait tüm kayıtları silmene neden olur. Bu işlemi gerçekleştirmek istediğine emin misin?'
+    }).subscribe((isConfirmed) => {
+      if (isConfirmed) {
+        this.departmentService.deleteDepartment(_id).subscribe(message => {
+          if (message.success === false) {
+            if (message.errcode) {
+              this.authService.logout();
+              this.router.navigate(['login']);
+            }
+            this.toastr.error(message.message);
+          } else {
+            this.toastr.success(message.message);
+            this.departments.splice(rowIndex, 1);
+            this.changeDetectorRef.detectChanges();
+          }
+        });
       }
-    })
+    });
   }
 } 

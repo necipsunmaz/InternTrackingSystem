@@ -68,6 +68,11 @@ export class SignupComponent implements OnInit {
     }
   }
 
+  closeIntern(intern){
+    console.log(intern);
+    this.selectedName = this.selectedName.filter(x => x._id !== intern);
+  }
+
   toInterns(id) {
     if (id != null) {
       this.userService.getInternsForAcademician(id).subscribe(data => {
@@ -75,12 +80,12 @@ export class SignupComponent implements OnInit {
           this.toastr.error(data.message);
         } else {
           if (data.data[0] !== undefined) {
-            for (var i = 0; i < data.data.length; i++) {
-              let a = { _id: data.data[i]._id, name: data.data[i].firstname + ' ' + data.data[i].lastname }
-              this.internsData.push(a);
-            }
+            data.data.forEach(element => {
+                let intern = { _id: element._id, name: element.firstname + ' ' + element.lastname}
+                this.internsData.push(intern);
+            });
           } else {
-            this.toastr.info('Lütfen önce departman seçin.');
+            this.toastr.info('Departmana kayıtlı stajyer bulunamadı.');
           }
         }
       });
@@ -96,7 +101,7 @@ export class SignupComponent implements OnInit {
 
   getDapartments() {
     //  if (this.internFormStep1.dirty && this.internFormStep1.valid) {
-    this.departmentsService.getDepartmentsForForm().subscribe(data => {
+    this.departmentsService.getDepartmentsForAcademicianForm().subscribe(data => {
       if (data.success === false) {
         this.toastr.error(data.message);
       } else {
@@ -176,7 +181,7 @@ export class SignupComponent implements OnInit {
           this.registerForm.reset();
         });
     } else {
-      this.toastr.error('Lütfen sizden istenen bilgileri doldurun!');
+      this.toastr.error('Lütfen sizden istenen bilgileri eksiksiz doldurun!');
     }
   }
 

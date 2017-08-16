@@ -121,4 +121,16 @@ export class DepartmentsService {
         console.error(error);
         return Observable.throw(error.json().error || 'Server error');
     }
+
+
+    // Only for Academician Form
+    getDepartmentsForAcademicianForm() {
+        let headers = new Headers({ 'Content-Type': 'application/json' });
+        let options = new RequestOptions({ headers: headers });
+
+        return this.http.get(`http://localhost:3000/academician-form`, options)
+            .map((response: Response) => response.json())
+            .catch(this.handleError);
+    }
+
 }

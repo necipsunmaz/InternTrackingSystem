@@ -1,6 +1,7 @@
 var mongoose = require('mongoose');
 var Department = require('../models/department');
 var User = require('../models/user');
+var Days = require('../models/days');
 var Intern = require('../models/intern');
 var jwt = require('jsonwebtoken');
 var config = require('../config');
@@ -286,6 +287,21 @@ exports.getDepartmentsForForm = function (req, res, next) {
   });
 }
 
+exports.getDepartmentsForAcademicianForm = function (req, res, next) {
+  Department.find('', '_id name', function (err, department) {
+    if (err) {
+      res.status(400).json({
+        success: false,
+        message: 'İşlem hataya uğradı! Hata: ' + err
+      });
+    }
+    res.status(200).json({
+      success: true,
+      data: department
+    });
+  });
+}
+
 exports.deleteDepartment = function (req, res, next) {
   if (req.decoded._doc.role === 0) {
     Department.findById(req.params.id).exec(function (err, department) {
@@ -305,6 +321,20 @@ exports.deleteDepartment = function (req, res, next) {
               message: 'İşlem hataya uğradı! Hata: ' + err
             });
           }
+        });
+
+        User.find({
+          department: department._id
+        }).exec(function(err, intern){
+          if (err) {
+            res.status(400).json({
+              success: false,
+              message: 'İşlem hataya uğradı! Hata: ' + err
+            });
+          }
+           intern.forEach(function(element) {
+             Days.remove({Intern_id: element._id}).exec(function (err){ if(err) next });
+           }, this);
         });
 
         User.remove({

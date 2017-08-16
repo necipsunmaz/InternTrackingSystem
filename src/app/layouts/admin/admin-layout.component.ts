@@ -112,7 +112,6 @@ export class AdminLayoutComponent implements OnInit, OnDestroy {
             this.toastr.error(department.message);
           } else {
             this.MenuHead = department.data;
-            console.log(this.MenuHead);
           }
         })
         MENUITEMS = [];

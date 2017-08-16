@@ -1,176 +1,149 @@
-import { Component, ViewChild, OnInit, Injectable } from '@angular/core';
-import { AuthService } from '../../user/auth.service';
+import { Component, OnInit } from '@angular/core';
 import { Router, ActivatedRoute, Params } from '@angular/router';
+import { DialogService } from "ng2-bootstrap-modal";
+import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { NgbDateStruct, NgbDatepickerI18n, NgbDateParserFormatter } from '@ng-bootstrap/ng-bootstrap';
+
+import { ConfirmComponent } from '../../common/confirm.component';
 import { ToastrService } from '../../common/toastr.service';
 import { InternService } from '../intern.service';
 import { IIntern } from '../intern';
-import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { NgbDateStruct, NgbDatepickerI18n } from '@ng-bootstrap/ng-bootstrap';
-
-
-const now = new Date();
-const I18N_VALUES = {
-  en: {
-    weekdays: ['Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa', 'Su'],
-    months: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
-  },
-  fr: {
-    weekdays: ['Lu', 'Ma', 'Me', 'Je', 'Ve', 'Sa', 'Di'],
-    months: ['Jan', 'Fév', 'Mar', 'Avr', 'Mai', 'Juin', 'Juil', 'Aou', 'Sep', 'Oct', 'Nov', 'Déc'],
-  },
-  tr: {
-    weekdays: ['Pzt', 'Sal', 'Çar', 'Per', 'Cum', 'Cmt', 'Paz'],
-    months: ['Oca', 'Şub', 'Mar', 'Nis', 'May', 'Haz', 'Tem', 'Ağu', 'Eyl', 'Eki', 'Kas', 'Ara'],
-  }
-};
-
-// Define a service holding the language. You probably already have one if your app is i18ned.
-@Injectable()
-export class I18n {
-  language = 'tr';
-}
-
-// Define custom service providing the months and weekdays translations
-@Injectable()
-export class CustomDatepickerI18n extends NgbDatepickerI18n {
-
-  constructor(private _i18n: I18n) {
-    super();
-  }
-
-  getWeekdayShortName(weekday: number): string {
-    return I18N_VALUES[this._i18n.language].weekdays[weekday - 1];
-  }
-  getMonthShortName(month: number): string {
-    return I18N_VALUES[this._i18n.language].months[month - 1];
-  }
-  getMonthFullName(month: number): string {
-    return this.getMonthShortName(month);
-  }
-}
-
 
 @Component({
-  selector: 'app-table-filter',
+  selector: 'app-table-selection',
   templateUrl: './tracking.component.html',
   styleUrls: ['./tracking.component.scss'],
-  providers: [I18n, { provide: NgbDatepickerI18n, useClass: CustomDatepickerI18n }]
+  providers: [DialogService]
 })
-
-
 export class TrackingComponent {
-  rows = [];
-
-  temp = [];
-
-  @ViewChild('datatable') datatable;
-
-  columns = [
-    { prop: 'İsim' },
-    { name: 'Soyisim' },
-    { name: 'Cinsiyet' },
-    { name: 'Email' },
-    { name: 'TC' },
-    { name: 'Doğum Tarihi' },
-    { name: 'Staj Başlama' },
-    { name: 'Staj Bitirme' }
-  ];
-
-  radioItems = ['Gün', 'Ay', 'Hafta'];
-  model = { options: 'Gün' };
-
-  constructor(private authService: AuthService,
-    private internService: InternService,
+  constructor(private internService: InternService,
     private route: ActivatedRoute,
     private router: Router,
-    private _i18n: I18n,
-    private toastr: ToastrService, ) {
+    private dialogService: DialogService,
+    private ngbDateParserFormatter: NgbDateParserFormatter,
+    private toastr: ToastrService) {
   }
+  rowsInterns: any[] = [];
+  selectedInterns: any[] = [];
+  selectInt = { selected: [] };
 
+  rowsDays = [];
+  selectedDays: any[] = [];
+  selectDay = { selected: [] };
 
+  interns: IIntern[];
+  days = [];
 
-  d: any;
-  d2: any;
-  d3: any;
-  model2: NgbDateStruct;
-  popupModel;
-  date: { year: number, month: number };
-  displayMonths = 2;
-  navigation = 'select';
-  disabledModel: NgbDateStruct = { year: now.getFullYear(), month: now.getMonth() + 1, day: now.getDate() };
-  disabled = true;
-  intModel;
-  customModel: NgbDateStruct;
+  amButton: boolean = false;
+  pmButton: boolean = false;
 
-  set language(language: string) {
-    this._i18n.language = language;
-  }
-
-  get language() {
-    return this._i18n.language;
-  }
-
-  selectToday() {
-    this.model2 = { year: now.getFullYear(), month: now.getMonth() + 1, day: now.getDate() };
-  }
-
-  isWeekend(date: NgbDateStruct) {
-    const d = new Date(date.year, date.month - 1, date.day);
-    return d.getDay() === 0 || d.getDay() === 6;
-  }
+  radioItems = ['Gün', 'Hafta', 'Ay', 'Dönem'];
+  model = { options: 'Gün' };
 
   isDisabled(date: NgbDateStruct, current: { month: number }) {
     return date.month !== current.month;
   }
 
 
-  interns: IIntern[];
-  userObj: any;
+  onSelectIntern({ selected }) {
+    this.selectInt.selected = selected;
+    if (selected.length != 0) {
+      let theForm = { time: this.toApisUnderstand(this.model.options), interns: [] };
+      selected.forEach(element => {
+        theForm.interns.push({ 'intern_id': element._id });
+      });
+
+      this.internService.postDaysByTime(theForm).subscribe(data => {
+        if (data.success === false) {
+          this.toastr.error(data.message);
+        } else {
+          this.rowsDays = data.data;
+          this.days = data.data;
+        }
+      });
+    } else {
+      this.rowsDays = [];
+    }
+  }
+
+  onSelectDays({ selected }) {
+    this.selectDay.selected = selected;
+    if (selected.length == 0) {
+      this.selectedDays = [];
+    }
+  }
 
   toApisUnderstand(data: string): string {
     switch (data) {
       case 'Gün': return 'day';
       case 'Hafta': return 'week';
       case 'Ay': return 'month';
+      case "Dönem": return 'period';
     }
   }
 
-  listRefresh() {
-    this.fetch((data) => {
-      // cache our list
-      this.temp = [...data];
-      // push our inital complete list
-      this.rows = data;
-    });
+  listRefresh(options) {
+    this.onSelectIntern(this.selectInt);
   }
-  fetch(cb) {
-    this.internService.getInternsByOption(this.toApisUnderstand(this.model.options))
+
+  fetchInterns() {
+    this.internService.getInternForTracking()//this.toApisUnderstand(this.model.options))
       .subscribe(data => {
         if (data.success === false) {
-          if (data.errcode) {
-            this.authService.logout();
-            this.router.navigate(['login']);
-          }
           this.toastr.error(data.message);
         } else {
-          cb(data.data);
+          this.interns = data.data;
+          this.rowsInterns = data.data;
         }
       });
   }
 
   ngOnInit() {
-    this.userObj = this.authService.currentUser;
-    this.listRefresh();
-    this.selectToday();
+    this.fetchInterns();
   }
 
-  updateFilter(event) {
+  saveDays() {
+    if(this.selectDay.selected.length !== 0){
+          let disposable = this.dialogService.addDialog(ConfirmComponent, {
+      title: 'Yoklama Listesi Onayı',
+      message: 'Seçtiğin tarihlerdeki yaptığın değişiklikleri kaydetmeyi onaylıyor musun?'
+    }).subscribe((isConfirmed) => {
+      if (isConfirmed) {
+        let theForm = { am:this.amButton, pm: this.pmButton, days: [] };
+        this.selectDay.selected.forEach(element => {
+          theForm.days.push({ '_id': element._id });
+        });
+        this.internService.postDaysForTracking(theForm).subscribe(data => {
+          if (data.success === false) {
+            this.toastr.error(data.message);
+          } else {
+            this.toastr.success(data.message);
+            this.onSelectIntern(this.selectInt);
+          }
+        });
+      }
+    });
+    } else {
+      this.toastr.error('Lütfen tarih seçiniz!');
+      this.selectDay.selected = [];
+    }
+  }
+
+  updateFilterIntern(event) {
     const val = event.target.value;
     // filter our data
-    const temp = this.temp.filter(function (d) {
-      return d.firstname.toLowerCase().indexOf(val) !== -1 || !val;
+    this.rowsInterns = this.interns.filter(function (d) {
+      return d.firstname.toLowerCase().indexOf(val) !== -1 || d.lastname.toLowerCase().indexOf(val) !== -1 || !val;
     });
     // update the rows
-    this.rows = temp;
+  }
+
+  updateFilterDay(event) {
+    const val = event.target.value;
+    // filter our data
+    this.rowsDays = this.days.filter(function (d) {
+      return d.date.indexOf(val) !== -1 || !val;
+    });
+    // update the rows
   }
 }
