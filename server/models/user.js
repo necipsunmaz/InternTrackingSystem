@@ -43,3 +43,18 @@ UserSchema.methods.comparePassword = function (candidatePassword, cb) {
 };
 
 module.exports = mongoose.model('users', UserSchema, 'users');
+
+// Example user data with mongo
+// Mongo db name: internshipdb
+// Mongo db collection name: users
+/*{
+    "firstname" : "Super",
+    "lastname" : "Admin",
+    "email" : "super@admin.com",
+    "username" : "superadmin",
+    "password" : "$2a$06$VaLoa.sn/TmzTObHFSh52OLAFVFeMVB8kXIpDfhPzrUdyn5UwvJf2", // SuperAdmin
+    "phone" : "5079053564",
+    "role" : 0,
+    "__v" : 1,
+    "isEnabled" : true
+}*/
